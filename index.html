@@ -1,0 +1,3887 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TravelReserve Pro | Sistema Completo de Reservas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        /* Reset e configurações básicas */
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --primary-light: #60a5fa;
+            --secondary: #8b5cf6;
+            --secondary-dark: #7c3aed;
+            --success: #10b981;
+            --success-dark: #059669;
+            --warning: #f59e0b;
+            --warning-dark: #d97706;
+            --danger: #ef4444;
+            --danger-dark: #dc2626;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --radius-sm: 0.375rem;
+            --radius: 0.5rem;
+            --radius-md: 0.75rem;
+            --radius-lg: 1rem;
+            --radius-xl: 1.25rem;
+            --radius-2xl: 1.5rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--gray-800);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .app {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem 2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: scale(1.02);
+        }
+
+        .logo-icon {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .logo-text {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .user-avatar {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+            cursor: pointer;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover .card-image {
+            transform: scale(1.05);
+        }
+
+        .card-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            line-height: 1.3;
+        }
+
+        .card-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            background: var(--gray-100);
+            padding: 0.375rem 0.75rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            white-space: nowrap;
+        }
+
+        .card-rating i {
+            color: #fbbf24;
+        }
+
+        .card-location {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gray-600);
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .card-description {
+            color: var(--gray-600);
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+
+        .card-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gray-600);
+            font-size: 0.8125rem;
+        }
+
+        .detail-item i {
+            color: var(--primary);
+            width: 1rem;
+            flex-shrink: 0;
+        }
+
+        .card-price {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 1.25rem;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .price span {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            font-weight: 400;
+        }
+
+        /* Flight cards */
+        .flight-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+        }
+
+        .flight-card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .flight-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .airline {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .airline-logo {
+            width: 3rem;
+            height: 3rem;
+            border-radius: var(--radius);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .airline-name {
+            font-weight: 700;
+            font-size: 1.125rem;
+        }
+
+        .flight-class {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+        }
+
+        .flight-route {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .route-time {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .route-city {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-top: 0.25rem;
+        }
+
+        .route-duration {
+            text-align: center;
+            color: var(--gray-700);
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .flight-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .info-label {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            margin-bottom: 0.25rem;
+        }
+
+        .info-value {
+            font-weight: 600;
+            color: var(--gray-700);
+            font-size: 0.875rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-lg);
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            white-space: nowrap;
+            user-select: none;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-200);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--gray-700);
+            border: 2px solid var(--gray-200);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-icon {
+            padding: 0.5rem;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .btn-favorite {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: var(--transition);
+            color: var(--gray-400);
+        }
+
+        .btn-favorite:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .btn-favorite.active {
+            color: var(--danger);
+        }
+
+        .btn-back {
+            background: white;
+            color: var(--gray-700);
+            border: 2px solid var(--gray-200);
+            margin-bottom: 2rem;
+        }
+
+        .btn-back:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 1rem;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal {
+            background: white;
+            border-radius: var(--radius-xl);
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: white;
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: var(--gray-500);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 50%;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+        }
+
+        .modal-close:hover {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 2001;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .toast {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1rem 1.25rem;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: slideIn 0.3s ease-out;
+            border-left: 4px solid;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: currentColor;
+            opacity: 0.2;
+        }
+
+        .toast-success {
+            border-left-color: var(--success);
+            color: var(--success);
+        }
+
+        .toast-error {
+            border-left-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .toast-info {
+            border-left-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .toast-warning {
+            border-left-color: var(--warning);
+            color: var(--warning);
+        }
+
+        .toast-content {
+            flex-grow: 1;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: var(--transition);
+            padding: 0.25rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        .toast-close:hover {
+            opacity: 1;
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray-600);
+        }
+
+        .loading-spinner {
+            width: 3rem;
+            height: 3rem;
+            border: 3px solid var(--gray-200);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Hero section */
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: white;
+            padding: 2rem;
+            border-radius: var(--radius-xl);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            margin-top: 1rem;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Section headers */
+        .section-header {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .view-all {
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0.9;
+            transition: var(--transition);
+        }
+
+        .view-all:hover {
+            opacity: 1;
+            transform: translateX(4px);
+        }
+
+        /* Empty states */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            color: var(--gray-300);
+            margin-bottom: 1rem;
+        }
+
+        /* Auth Pages */
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(139, 92, 246, 0.8));
+        }
+
+        .auth-card {
+            background: white;
+            border-radius: var(--radius-2xl);
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .auth-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .auth-logo-icon {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .auth-logo-text {
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .auth-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-subtitle {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+        }
+
+        .auth-form {
+            margin-bottom: 2rem;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .auth-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .auth-link:hover {
+            text-decoration: underline;
+        }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: var(--gray-400);
+        }
+
+        .auth-divider:before,
+        .auth-divider:after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--gray-200);
+        }
+
+        .auth-divider span {
+            padding: 0 1rem;
+            font-size: 0.875rem;
+        }
+
+        .social-login {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius);
+            background: white;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .social-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .social-btn.google {
+            color: #EA4335;
+        }
+
+        .social-btn.facebook {
+            color: #1877F2;
+        }
+
+        .social-btn.apple {
+            color: #000000;
+        }
+
+        .social-btn.microsoft {
+            color: #0078D4;
+        }
+
+        /* User Dashboard */
+        .user-dashboard {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .user-welcome h1 {
+            font-size: 1.75rem;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .user-welcome p {
+            color: var(--gray-600);
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--primary);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+        }
+
+        .dashboard-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .dashboard-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--gray-900);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-list {
+            list-style: none;
+        }
+
+        .section-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+                padding: 1.25rem;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            
+            .section-header {
+                font-size: 1.75rem;
+            }
+            
+            .card-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .flight-route {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .flight-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .toast-container {
+                left: 1rem;
+                right: 1rem;
+                bottom: 1rem;
+            }
+            
+            .auth-card {
+                padding: 2rem;
+            }
+            
+            .social-login {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Formulários */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--gray-700);
+            font-size: 0.875rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            transition: var(--transition);
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-input.error {
+            border-color: var(--danger);
+        }
+
+        .form-error {
+            color: var(--danger);
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        /* Seat Selection */
+        .seat-selection-container {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .seat-selection-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .seat-selection-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .seat-legend {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .legend-color {
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 4px;
+        }
+
+        .legend-available {
+            background: var(--success);
+        }
+
+        .legend-selected {
+            background: var(--primary);
+        }
+
+        .legend-occupied {
+            background: var(--gray-300);
+        }
+
+        .seats-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 0.5rem;
+            margin: 2rem 0;
+        }
+
+        .seat {
+            aspect-ratio: 1;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .seat:hover:not(.occupied) {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-md);
+        }
+
+        .seat.available {
+            background: var(--success);
+        }
+
+        .seat.selected {
+            background: var(--primary);
+            border-color: var(--primary-dark);
+        }
+
+        .seat.occupied {
+            background: var(--gray-300);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* Payment Methods */
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .payment-method {
+            background: white;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .payment-method:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .payment-method.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(139, 92, 246, 0.05));
+        }
+
+        .payment-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .payment-name {
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 0.5rem;
+        }
+
+        .payment-desc {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+        }
+
+        /* Passenger Data */
+        .passenger-form-container {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .passenger-header {
+            margin-bottom: 2rem;
+        }
+
+        .passenger-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-number {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            background: var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--gray-600);
+            transition: var(--transition);
+        }
+
+        .progress-step.active .step-number {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .step-label {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            font-weight: 600;
+        }
+
+        .progress-step.active .step-label {
+            color: var(--primary);
+        }
+
+        .progress-line {
+            position: absolute;
+            top: 1.5rem;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gray-200);
+            z-index: 0;
+        }
+
+        .progress-line-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            transition: width 0.3s ease;
+        }
+
+        /* Aviões disponíveis */
+        .aircrafts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .aircraft-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--gray-200);
+            transition: var(--transition);
+        }
+
+        .aircraft-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .aircraft-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .aircraft-icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: var(--radius);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .aircraft-info {
+            flex: 1;
+        }
+
+        .aircraft-name {
+            font-weight: 700;
+            color: var(--gray-800);
+            font-size: 1.125rem;
+        }
+
+        .aircraft-type {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-top: 0.25rem;
+        }
+
+        .aircraft-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .aircraft-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--gray-700);
+        }
+
+        .aircraft-detail i {
+            color: var(--primary);
+            width: 1rem;
+        }
+
+        /* Flight times */
+        .flight-times {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .time-slot {
+            background: white;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius);
+            padding: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .time-slot:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .time-slot.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+        }
+
+        .time-display {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .time-label {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+            margin-top: 0.25rem;
+        }
+
+        /* Booking Summary */
+        .booking-summary {
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .summary-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--gray-800);
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 1.125rem;
+        }
+
+        .summary-label {
+            color: var(--gray-600);
+        }
+
+        .summary-value {
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        /* Confirmation */
+        .confirmation-container {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 3rem;
+            margin: 2rem 0;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .confirmation-icon {
+            font-size: 4rem;
+            color: var(--success);
+            margin-bottom: 1.5rem;
+        }
+
+        .confirmation-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 1rem;
+        }
+
+        .confirmation-message {
+            color: var(--gray-600);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .booking-details {
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-top: 2rem;
+            text-align: left;
+        }
+
+        /* Filter bar */
+        .filter-bar {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: var(--gray-700);
+            font-size: 0.875rem;
+        }
+
+        .filter-select {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius);
+            background: white;
+            font-size: 0.875rem;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // Dados dos destinos
+        const destinationsData = [
+            {
+                id: 1,
+                name: 'Maldivas',
+                country: 'Maldivas',
+                image: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                price: 4500,
+                rating: 4.9,
+                description: 'Paraíso tropical com águas cristalinas e resorts de luxo sobre a água. Ideal para lua de mel e férias em família.',
+                duration: '7 dias',
+                climate: 'Tropical',
+                bestSeason: 'Nov-Abr',
+                reviews: 1280,
+                airportCode: 'MLE'
+            },
+            {
+                id: 2,
+                name: 'Santorini',
+                country: 'Grécia',
+                image: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                price: 3200,
+                rating: 4.8,
+                description: 'Ilha grega com vistas deslumbrantes do Mar Egeu e arquitetura característica branca e azul.',
+                duration: '5 dias',
+                climate: 'Mediterrâneo',
+                bestSeason: 'Jun-Set',
+                reviews: 2150,
+                airportCode: 'JTR'
+            },
+            {
+                id: 3,
+                name: 'Tóquio',
+                country: 'Japão',
+                image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                price: 3800,
+                rating: 4.7,
+                description: 'Metrópole futurista que combina tecnologia de ponta com tradições milenares.',
+                duration: '10 dias',
+                climate: 'Temperado',
+                bestSeason: 'Mar-Mai',
+                reviews: 1870,
+                airportCode: 'HND'
+            },
+            {
+                id: 4,
+                name: 'Nova Iorque',
+                country: 'EUA',
+                image: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                price: 4200,
+                rating: 4.6,
+                description: 'A cidade que nunca dorme, cheia de energia, cultura e pontos turísticos icônicos.',
+                duration: '7 dias',
+                climate: 'Continental',
+                bestSeason: 'Set-Nov',
+                reviews: 3250,
+                airportCode: 'JFK'
+            },
+            {
+                id: 5,
+                name: 'Paris',
+                country: 'França',
+                image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                price: 3500,
+                rating: 4.8,
+                description: 'Cidade luz, capital mundial da moda, gastronomia e cultura.',
+                duration: '6 dias',
+                climate: 'Temperado',
+                bestSeason: 'Abr-Jun',
+                reviews: 2850,
+                airportCode: 'CDG'
+            },
+            {
+                id: 6,
+                name: 'Rio de Janeiro',
+                country: 'Brasil',
+                image: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                price: 1800,
+                rating: 4.5,
+                description: 'Cidade maravilhosa com praias deslumbrantes, montanhas e cultura vibrante.',
+                duration: '5 dias',
+                climate: 'Tropical',
+                bestSeason: 'Dez-Mar',
+                reviews: 1920,
+                airportCode: 'GIG'
+            }
+        ];
+
+        // Dados dos voos com múltiplas opções
+        const flightsData = [
+            // Maldivas - 3 voos diferentes
+            {
+                id: 1,
+                destinationId: 1,
+                airline: 'Emirates',
+                airlineCode: 'EK',
+                from: 'GRU',
+                fromCity: 'São Paulo',
+                to: 'MLE',
+                toCity: 'Maldivas',
+                departure: '22:30',
+                arrival: '18:45',
+                duration: '14h15m',
+                stops: 1,
+                price: 4200,
+                date: '2024-06-15',
+                class: 'Executiva',
+                baggage: '2x 32kg',
+                amenities: ['Wi-Fi', 'Entretenimento', 'Refeição', 'Assento reclinável'],
+                aircraft: 'Boeing 777-300ER',
+                aircraftType: 'Wide-body',
+                seatsAvailable: 8,
+                flightNumber: 'EK 248'
+            },
+            {
+                id: 2,
+                destinationId: 1,
+                airline: 'Qatar Airways',
+                airlineCode: 'QR',
+                from: 'GRU',
+                fromCity: 'São Paulo',
+                to: 'MLE',
+                toCity: 'Maldivas',
+                departure: '16:45',
+                arrival: '14:20',
+                duration: '15h35m',
+                stops: 1,
+                price: 3800,
+                date: '2024-06-16',
+                class: 'Executiva',
+                baggage: '2x 32kg',
+                amenities: ['Wi-Fi', 'Qsuite', 'Refeição gourmet'],
+                aircraft: 'Airbus A350-1000',
+                aircraftType: 'Wide-body',
+                seatsAvailable: 12,
+                flightNumber: 'QR 148'
+            },
+            {
+                id: 3,
+                destinationId: 1,
+                airline: 'LATAM',
+                airlineCode: 'LA',
+                from: 'GRU',
+                fromCity: 'São Paulo',
+                to: 'MLE',
+                toCity: 'Maldivas',
+                departure: '14:20',
+                arrival: '11:45',
+                duration: '16h25m',
+                stops: 2,
+                price: 3200,
+                date: '2024-06-17',
+                class: 'Econômica Premium',
+                baggage: '2x 23kg',
+                amenities: ['Wi-Fi', 'Entretenimento', 'Refeições'],
+                aircraft: 'Boeing 787-9',
+                aircraftType: 'Wide-body',
+                seatsAvailable: 15,
+                flightNumber: 'LA 8452'
+            },
+            // Santorini - 2 voos diferentes
+            {
+                id: 4,
+                destinationId: 2,
+                airline: 'Air France',
+                airlineCode: 'AF',
+                from: 'GRU',
+                fromCity: 'São Paulo',
+                to: 'JTR',
+                toCity: 'Santorini',
+                departure: '23:15',
+                arrival: '20:30',
+                duration: '13h15m',
+                stops: 1,
+                price: 3500,
+                date: '2024-07-20',
+                class: 'Executiva',
+                baggage: '2x 32kg',
+                amenities: ['Wi-Fi', 'Entretenimento', 'Refeição gourmet'],
+                aircraft: 'Airbus A330-200',
+                aircraftType: 'Wide-body',
+                seatsAvailable: 6,
+                flightNumber: 'AF 457'
+            },
+            {
+                id: 5,
+                destinationId: 2,
+                airline: 'KLM',
+                airlineCode: 'KL',
+                from: 'GIG',
+                fromCity: 'Rio de Janeiro',
+                to: 'JTR',
+                toCity: 'Santorini',
+                departure: '20:30',
+                arrival: '18:15',
+                duration: '14h45m',
+                stops: 1,
+                price: 3100,
+                date: '2024-07-21',
+                class: 'Executiva',
+                baggage: '2x 32kg',
+                amenities: ['Wi-Fi', 'Entretenimento', 'Refeição holandesa'],
+                aircraft: 'Boeing 787-10',
+                aircraftType: 'Wide-body',
+                seatsAvailable: 10,
+                flightNumber: 'KL 792'
+            },
+            // Tóquio - 2 voos diferentes
+            {
+                id: 6,
+                destinationId: 3,
+                airline: 'Japan Airlines',
+                airlineCode: 'JL',
+                from: 'GRU',
+                fromCity: 'São Paulo',
+                to: 'HND',
+                toCity: 'Tóquio',
+                departure: '01:45',
+                arrival: '05:30',
+                duration: '26h45m',
+                stops: 1,
+                price: 5200,
+                date: '2024-08-10',
+                class: 'Primeira Classe',
+                baggage: '3x 32kg',
+                amenities: ['Wi-Fi', 'Entretenimento premium', 'Culinária japonesa'],
+                aircraft: 'Boeing 777-300',
+                aircraftType: 'Wide-body',
+                seatsAvailable: 4,
+                flightNumber: 'JL 62'
+            },
+            {
+                id: 7,
+                destinationId: 3,
+                airline: 'ANA',
+                airlineCode: 'NH',
+                from: 'GRU',
+                fromCity: 'São Paulo',
+                to: 'HND',
+                toCity: 'Tóquio',
+                departure: '15:30',
+                arrival: '22:45',
+                duration: '25h15m',
+                stops: 1,
+                price: 4500,
+                date: '2024-08-11',
+                class: 'Executiva',
+                baggage: '2x 32kg',
+                amenities: ['Wi-Fi', 'The Room (assento)', 'Culinária japonesa'],
+                aircraft: 'Boeing 787-9',
+                aircraftType: 'Wide-body',
+                seatsAvailable: 8,
+                flightNumber: 'NH 810'
+            },
+            // Nova Iorque - 2 voos diferentes
+            {
+                id: 8,
+                destinationId: 4,
+                airline: 'American Airlines',
+                airlineCode: 'AA',
+                from: 'GRU',
+                fromCity: 'São Paulo',
+                to: 'JFK',
+                toCity: 'Nova Iorque',
+                departure: '22:15',
+                arrival: '06:30',
+                duration: '10h15m',
+                stops: 0,
+                price: 3200,
+                date: '2024-09-05',
+                class: 'Executiva',
+                baggage: '2x 32kg',
+                amenities: ['Wi-Fi', 'Entretenimento', 'Refeições'],
+                aircraft: 'Boeing 777-200',
+                aircraftType: 'Wide-body',
+                seatsAvailable: 9,
+                flightNumber: 'AA 904'
+            },
+            {
+                id: 9,
+                destinationId: 4,
+                airline: 'Delta',
+                airlineCode: 'DL',
+                from: 'GIG',
+                fromCity: 'Rio de Janeiro',
+                to: 'JFK',
+                toCity: 'Nova Iorque',
+                departure: '21:45',
+                arrival: '06:15',
+                duration: '9h30m',
+                stops: 0,
+                price: 2900,
+                date: '2024-09-06',
+                class: 'Econômica Premium',
+                baggage: '2x 23kg',
+                amenities: ['Wi-Fi', 'Entretenimento', 'Comidas regionais'],
+                aircraft: 'Airbus A330-900neo',
+                aircraftType: 'Wide-body',
+                seatsAvailable: 12,
+                flightNumber: 'DL 162'
+            },
+            // Paris - 2 voos diferentes
+            {
+                id: 10,
+                destinationId: 5,
+                airline: 'Air France',
+                airlineCode: 'AF',
+                from: 'GRU',
+                fromCity: 'São Paulo',
+                to: 'CDG',
+                toCity: 'Paris',
+                departure: '23:45',
+                arrival: '14:15',
+                duration: '10h30m',
+                stops: 0,
+                price: 3500,
+                date: '2024-10-15',
+                class: 'Executiva',
+                baggage: '2x 32kg',
+                amenities: ['Wi-Fi', 'Entretenimento', 'Culinária francesa'],
+                aircraft: 'Airbus A350-900',
+                aircraftType: 'Wide-body',
+                seatsAvailable: 7,
+                flightNumber: 'AF 457'
+            },
+            {
+                id: 11,
+                destinationId: 5,
+                airline: 'LATAM',
+                airlineCode: 'LA',
+                from: 'GRU',
+                fromCity: 'São Paulo',
+                to: 'CDG',
+                toCity: 'Paris',
+                departure: '16:20',
+                arrival: '08:45',
+                duration: '11h25m',
+                stops: 0,
+                price: 2800,
+                date: '2024-10-16',
+                class: 'Econômica Premium',
+                baggage: '2x 23kg',
+                amenities: ['Wi-Fi', 'Entretenimento', 'Refeições brasileiras'],
+                aircraft: 'Boeing 777-300ER',
+                aircraftType: 'Wide-body',
+                seatsAvailable: 15,
+                flightNumber: 'LA 8084'
+            },
+            // Rio de Janeiro - 2 voos diferentes
+            {
+                id: 12,
+                destinationId: 6,
+                airline: 'GOL',
+                airlineCode: 'G3',
+                from: 'GRU',
+                fromCity: 'São Paulo',
+                to: 'GIG',
+                toCity: 'Rio de Janeiro',
+                departure: '07:30',
+                arrival: '08:45',
+                duration: '1h15m',
+                stops: 0,
+                price: 450,
+                date: '2024-06-20',
+                class: 'Econômica',
+                baggage: '1x 23kg',
+                amenities: ['Wi-Fi pago', 'Snack básico'],
+                aircraft: 'Boeing 737-800',
+                aircraftType: 'Narrow-body',
+                seatsAvailable: 28,
+                flightNumber: 'G3 1012'
+            },
+            {
+                id: 13,
+                destinationId: 6,
+                airline: 'LATAM',
+                airlineCode: 'LA',
+                from: 'GRU',
+                fromCity: 'São Paulo',
+                to: 'GIG',
+                toCity: 'Rio de Janeiro',
+                departure: '18:15',
+                arrival: '19:30',
+                duration: '1h15m',
+                stops: 0,
+                price: 520,
+                date: '2024-06-20',
+                class: 'Econômica',
+                baggage: '1x 23kg',
+                amenities: ['Wi-Fi', 'Entretenimento básico'],
+                aircraft: 'Airbus A320',
+                aircraftType: 'Narrow-body',
+                seatsAvailable: 24,
+                flightNumber: 'LA 3556'
+            }
+        ];
+
+        // Tipos de assentos
+        const seatTypes = [
+            { id: 1, type: 'window', name: 'Janela', price: 50 },
+            { id: 2, type: 'aisle', name: 'Corredor', price: 30 },
+            { id: 3, type: 'middle', name: 'Meio', price: 0 },
+            { id: 4, type: 'extra-legroom', name: 'Mais espaço', price: 100 },
+            { id: 5, type: 'exit-row', name: 'Saída de emergência', price: 150 }
+        ];
+
+        // Formas de pagamento
+        const paymentMethods = [
+            { id: 1, name: 'Cartão de Crédito', icon: 'fa-credit-card', description: 'Pague em até 12x' },
+            { id: 2, name: 'Cartão de Débito', icon: 'fa-credit-card', description: 'Débito em conta' },
+            { id: 3, name: 'PIX', icon: 'fa-qrcode', description: 'Pagamento instantâneo' },
+            { id: 4, name: 'Boleto Bancário', icon: 'fa-barcode', description: 'Vencimento em 3 dias' },
+            { id: 5, name: 'PayPal', icon: 'fa-paypal', description: 'Pagamento internacional' },
+            { id: 6, name: 'Apple Pay', icon: 'fa-apple', description: 'Pagamento via Apple' }
+        ];
+
+        // Componente Toast
+        function Toast({ message, type, onClose }) {
+            React.useEffect(() => {
+                const timer = setTimeout(onClose, 5000);
+                return () => clearTimeout(timer);
+            }, [onClose]);
+
+            const icons = {
+                success: 'fas fa-check-circle',
+                error: 'fas fa-exclamation-circle',
+                info: 'fas fa-info-circle',
+                warning: 'fas fa-exclamation-triangle'
+            };
+
+            return (
+                <div className={`toast toast-${type}`} role="alert" aria-live="polite">
+                    <i className={icons[type]} aria-hidden="true"></i>
+                    <div className="toast-content">
+                        <strong>{type === 'success' ? 'Sucesso' : type === 'error' ? 'Erro' : type === 'info' ? 'Informação' : 'Aviso'}: </strong>
+                        <span>{message}</span>
+                    </div>
+                    <button 
+                        className="toast-close" 
+                        onClick={onClose}
+                        aria-label="Fechar notificação"
+                    >
+                        <i className="fas fa-times" aria-hidden="true"></i>
+                    </button>
+                </div>
+            );
+        }
+
+        // Componente Login
+        function Login({ onLogin, onSwitchToRegister }) {
+            const [formData, setFormData] = React.useState({
+                email: '',
+                password: '',
+                rememberMe: false
+            });
+            
+            const [errors, setErrors] = React.useState({});
+            const [isLoading, setIsLoading] = React.useState(false);
+
+            const handleChange = (field, value) => {
+                setFormData(prev => ({ ...prev, [field]: value }));
+                if (errors[field]) {
+                    setErrors(prev => ({ ...prev, [field]: '' }));
+                }
+            };
+
+            const validateForm = () => {
+                const newErrors = {};
+                
+                if (!formData.email.trim()) {
+                    newErrors.email = 'E-mail é obrigatório';
+                } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+                    newErrors.email = 'E-mail inválido';
+                }
+                
+                if (!formData.password.trim()) {
+                    newErrors.password = 'Senha é obrigatória';
+                } else if (formData.password.length < 6) {
+                    newErrors.password = 'Senha deve ter pelo menos 6 caracteres';
+                }
+                
+                setErrors(newErrors);
+                return Object.keys(newErrors).length === 0;
+            };
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                
+                if (!validateForm()) {
+                    return;
+                }
+                
+                setIsLoading(true);
+                
+                try {
+                    // Simular chamada de API
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    const user = {
+                        id: 1,
+                        name: 'João Silva',
+                        email: formData.email,
+                        initials: 'JS',
+                        stats: {
+                            bookings: 3,
+                            miles: 12500,
+                            favorites: 5
+                        },
+                        preferences: {
+                            newsletter: true,
+                            notifications: true
+                        }
+                    };
+                    
+                    onLogin(user);
+                    window.addToast?.('Login realizado com sucesso!', 'success');
+                } catch (error) {
+                    window.addToast?.('Erro ao fazer login. Tente novamente.', 'error');
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            const handleSocialLogin = (provider) => {
+                window.addToast?.(`Login com ${provider} em desenvolvimento!`, 'info');
+            };
+
+            return (
+                <div className="auth-container animate-in">
+                    <div className="auth-card">
+                        <div className="auth-header">
+                            <div className="auth-logo">
+                                <div className="auth-logo-icon">
+                                    <i className="fas fa-plane" aria-hidden="true"></i>
+                                </div>
+                                <div className="auth-logo-text">TravelReserve Pro</div>
+                            </div>
+                            <h1 className="auth-title">Bem-vindo de volta!</h1>
+                            <p className="auth-subtitle">Faça login para continuar sua jornada</p>
+                        </div>
+                        
+                        <form className="auth-form" onSubmit={handleSubmit}>
+                            <div className="form-group">
+                                <label className="form-label">E-mail</label>
+                                <input
+                                    type="email"
+                                    className={`form-input ${errors.email ? 'error' : ''}`}
+                                    value={formData.email}
+                                    onChange={(e) => handleChange('email', e.target.value)}
+                                    placeholder="seu@email.com"
+                                    disabled={isLoading}
+                                />
+                                {errors.email && <div className="form-error">{errors.email}</div>}
+                            </div>
+                            
+                            <div className="form-group">
+                                <label className="form-label">Senha</label>
+                                <input
+                                    type="password"
+                                    className={`form-input ${errors.password ? 'error' : ''}`}
+                                    value={formData.password}
+                                    onChange={(e) => handleChange('password', e.target.value)}
+                                    placeholder="Sua senha"
+                                    disabled={isLoading}
+                                />
+                                {errors.password && <div className="form-error">{errors.password}</div>}
+                            </div>
+                            
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                                    <input
+                                        type="checkbox"
+                                        checked={formData.rememberMe}
+                                        onChange={(e) => handleChange('rememberMe', e.target.checked)}
+                                        disabled={isLoading}
+                                    />
+                                    <span style={{ fontSize: '0.875rem', color: 'var(--gray-600)' }}>Lembrar-me</span>
+                                </label>
+                                
+                                <button 
+                                    type="button" 
+                                    className="auth-link" 
+                                    onClick={() => window.addToast?.('Recuperação de senha em desenvolvimento!', 'info')}
+                                >
+                                    Esqueci minha senha
+                                </button>
+                            </div>
+                            
+                            <button 
+                                type="submit" 
+                                className="btn btn-primary" 
+                                style={{ width: '100%' }}
+                                disabled={isLoading}
+                            >
+                                {isLoading ? (
+                                    <>
+                                        <i className="fas fa-spinner fa-spin" aria-hidden="true"></i>
+                                        Entrando...
+                                    </>
+                                ) : (
+                                    <>
+                                        <i className="fas fa-sign-in-alt" aria-hidden="true"></i>
+                                        Entrar
+                                    </>
+                                )}
+                            </button>
+                        </form>
+                        
+                        <div className="auth-divider">
+                            <span>ou continue com</span>
+                        </div>
+                        
+                        <div className="social-login">
+                            <button 
+                                type="button" 
+                                className="social-btn google"
+                                onClick={() => handleSocialLogin('Google')}
+                            >
+                                <i className="fab fa-google" aria-hidden="true"></i>
+                                Google
+                            </button>
+                            <button 
+                                type="button" 
+                                className="social-btn facebook"
+                                onClick={() => handleSocialLogin('Facebook')}
+                            >
+                                <i className="fab fa-facebook" aria-hidden="true"></i>
+                                Facebook
+                            </button>
+                            <button 
+                                type="button" 
+                                className="social-btn apple"
+                                onClick={() => handleSocialLogin('Apple')}
+                            >
+                                <i className="fab fa-apple" aria-hidden="true"></i>
+                                Apple
+                            </button>
+                            <button 
+                                type="button" 
+                                className="social-btn microsoft"
+                                onClick={() => handleSocialLogin('Microsoft')}
+                            >
+                                <i className="fab fa-microsoft" aria-hidden="true"></i>
+                                Microsoft
+                            </button>
+                        </div>
+                        
+                        <div className="auth-footer">
+                            <p style={{ color: 'var(--gray-600)' }}>
+                                Não tem uma conta?{' '}
+                                <button 
+                                    className="auth-link" 
+                                    onClick={onSwitchToRegister}
+                                >
+                                    Cadastre-se
+                                </button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Componente Register
+        function Register({ onRegister, onSwitchToLogin }) {
+            const [formData, setFormData] = React.useState({
+                name: '',
+                email: '',
+                password: '',
+                confirmPassword: '',
+                phone: '',
+                acceptTerms: false
+            });
+            
+            const [errors, setErrors] = React.useState({});
+            const [isLoading, setIsLoading] = React.useState(false);
+
+            const handleChange = (field, value) => {
+                setFormData(prev => ({ ...prev, [field]: value }));
+                if (errors[field]) {
+                    setErrors(prev => ({ ...prev, [field]: '' }));
+                }
+            };
+
+            const validateForm = () => {
+                const newErrors = {};
+                
+                if (!formData.name.trim()) {
+                    newErrors.name = 'Nome completo é obrigatório';
+                }
+                
+                if (!formData.email.trim()) {
+                    newErrors.email = 'E-mail é obrigatório';
+                } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+                    newErrors.email = 'E-mail inválido';
+                }
+                
+                if (!formData.password.trim()) {
+                    newErrors.password = 'Senha é obrigatória';
+                } else if (formData.password.length < 8) {
+                    newErrors.password = 'Senha deve ter pelo menos 8 caracteres';
+                }
+                
+                if (!formData.confirmPassword.trim()) {
+                    newErrors.confirmPassword = 'Confirme sua senha';
+                } else if (formData.password !== formData.confirmPassword) {
+                    newErrors.confirmPassword = 'As senhas não coincidem';
+                }
+                
+                if (!formData.acceptTerms) {
+                    newErrors.acceptTerms = 'Você deve aceitar os termos e condições';
+                }
+                
+                setErrors(newErrors);
+                return Object.keys(newErrors).length === 0;
+            };
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                
+                if (!validateForm()) {
+                    return;
+                }
+                
+                setIsLoading(true);
+                
+                try {
+                    // Simular chamada de API
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    const user = {
+                        id: 1,
+                        name: formData.name,
+                        email: formData.email,
+                        phone: formData.phone,
+                        initials: formData.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2),
+                        stats: {
+                            bookings: 0,
+                            miles: 0,
+                            favorites: 0
+                        },
+                        preferences: {
+                            newsletter: true,
+                            notifications: true
+                        }
+                    };
+                    
+                    onRegister(user);
+                    window.addToast?.('Cadastro realizado com sucesso!', 'success');
+                } catch (error) {
+                    window.addToast?.('Erro ao criar conta. Tente novamente.', 'error');
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            return (
+                <div className="auth-container animate-in">
+                    <div className="auth-card">
+                        <div className="auth-header">
+                            <div className="auth-logo">
+                                <div className="auth-logo-icon">
+                                    <i className="fas fa-plane" aria-hidden="true"></i>
+                                </div>
+                                <div className="auth-logo-text">TravelReserve Pro</div>
+                            </div>
+                            <h1 className="auth-title">Criar Conta</h1>
+                            <p className="auth-subtitle">Junte-se a milhares de viajantes</p>
+                        </div>
+                        
+                        <form className="auth-form" onSubmit={handleSubmit}>
+                            <div className="form-group">
+                                <label className="form-label">Nome Completo</label>
+                                <input
+                                    type="text"
+                                    className={`form-input ${errors.name ? 'error' : ''}`}
+                                    value={formData.name}
+                                    onChange={(e) => handleChange('name', e.target.value)}
+                                    placeholder="João Silva"
+                                    disabled={isLoading}
+                                />
+                                {errors.name && <div className="form-error">{errors.name}</div>}
+                            </div>
+                            
+                            <div className="form-group">
+                                <label className="form-label">E-mail</label>
+                                <input
+                                    type="email"
+                                    className={`form-input ${errors.email ? 'error' : ''}`}
+                                    value={formData.email}
+                                    onChange={(e) => handleChange('email', e.target.value)}
+                                    placeholder="seu@email.com"
+                                    disabled={isLoading}
+                                />
+                                {errors.email && <div className="form-error">{errors.email}</div>}
+                            </div>
+                            
+                            <div className="form-group">
+                                <label className="form-label">Telefone</label>
+                                <input
+                                    type="tel"
+                                    className="form-input"
+                                    value={formData.phone}
+                                    onChange={(e) => handleChange('phone', e.target.value)}
+                                    placeholder="(11) 99999-9999"
+                                    disabled={isLoading}
+                                />
+                            </div>
+                            
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <label className="form-label">Senha</label>
+                                    <input
+                                        type="password"
+                                        className={`form-input ${errors.password ? 'error' : ''}`}
+                                        value={formData.password}
+                                        onChange={(e) => handleChange('password', e.target.value)}
+                                        placeholder="Mínimo 8 caracteres"
+                                        disabled={isLoading}
+                                    />
+                                    {errors.password && <div className="form-error">{errors.password}</div>}
+                                </div>
+                                
+                                <div className="form-group">
+                                    <label className="form-label">Confirmar Senha</label>
+                                    <input
+                                        type="password"
+                                        className={`form-input ${errors.confirmPassword ? 'error' : ''}`}
+                                        value={formData.confirmPassword}
+                                        onChange={(e) => handleChange('confirmPassword', e.target.value)}
+                                        placeholder="Digite novamente"
+                                        disabled={isLoading}
+                                    />
+                                    {errors.confirmPassword && <div className="form-error">{errors.confirmPassword}</div>}
+                                </div>
+                            </div>
+                            
+                            <div style={{ marginBottom: '1.5rem' }}>
+                                <label style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', cursor: 'pointer' }}>
+                                    <input
+                                        type="checkbox"
+                                        checked={formData.acceptTerms}
+                                        onChange={(e) => handleChange('acceptTerms', e.target.checked)}
+                                        disabled={isLoading}
+                                        style={{ marginTop: '0.25rem' }}
+                                    />
+                                    <span style={{ fontSize: '0.875rem', color: 'var(--gray-600)' }}>
+                                        Eu concordo com os{' '}
+                                        <button 
+                                            type="button" 
+                                            className="auth-link" 
+                                            onClick={() => window.addToast?.('Termos de uso em desenvolvimento!', 'info')}
+                                            style={{ fontSize: '0.875rem' }}
+                                        >
+                                            Termos de Uso
+                                        </button>{' '}
+                                        e{' '}
+                                        <button 
+                                            type="button" 
+                                            className="auth-link" 
+                                            onClick={() => window.addToast?.('Política de privacidade em desenvolvimento!', 'info')}
+                                            style={{ fontSize: '0.875rem' }}
+                                        >
+                                            Política de Privacidade
+                                        </button>
+                                    </span>
+                                </label>
+                                {errors.acceptTerms && <div className="form-error" style={{ marginTop: '0.5rem' }}>{errors.acceptTerms}</div>}
+                            </div>
+                            
+                            <button 
+                                type="submit" 
+                                className="btn btn-primary" 
+                                style={{ width: '100%' }}
+                                disabled={isLoading}
+                            >
+                                {isLoading ? (
+                                    <>
+                                        <i className="fas fa-spinner fa-spin" aria-hidden="true"></i>
+                                        Criando conta...
+                                    </>
+                                ) : (
+                                    <>
+                                        <i className="fas fa-user-plus" aria-hidden="true"></i>
+                                        Criar Conta
+                                    </>
+                                )}
+                            </button>
+                        </form>
+                        
+                        <div className="auth-footer">
+                            <p style={{ color: 'var(--gray-600)' }}>
+                                Já tem uma conta?{' '}
+                                <button 
+                                    className="auth-link" 
+                                    onClick={onSwitchToLogin}
+                                >
+                                    Faça login
+                                </button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Componente Dashboard do Usuário
+        function UserDashboard({ user, onLogout, onStartBooking }) {
+            return (
+                <div className="user-dashboard">
+                    <div className="dashboard-header">
+                        <div className="user-welcome">
+                            <h1>Bem-vindo, {user.name}!</h1>
+                            <p>Gerencie suas viagens e preferências</p>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            <div className="user-avatar">
+                                {user.initials}
+                            </div>
+                            <button className="btn btn-outline" onClick={onLogout}>
+                                <i className="fas fa-sign-out-alt" aria-hidden="true"></i>
+                                Sair
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div className="dashboard-stats">
+                        <div className="stat-card">
+                            <div className="stat-value">{user.stats?.bookings || 0}</div>
+                            <div className="stat-label">Reservas</div>
+                        </div>
+                        <div className="stat-card">
+                            <div className="stat-value">{user.stats?.miles?.toLocaleString() || '0'}</div>
+                            <div className="stat-label">Milhas Acumuladas</div>
+                        </div>
+                        <div className="stat-card">
+                            <div className="stat-value">{user.stats?.favorites || 0}</div>
+                            <div className="stat-label">Favoritos</div>
+                        </div>
+                    </div>
+                    
+                    <div className="dashboard-sections">
+                        <div className="dashboard-section">
+                            <h3 className="section-title">
+                                <i className="fas fa-plane" aria-hidden="true"></i>
+                                Minhas Viagens
+                            </h3>
+                            <ul className="section-list">
+                                <li>
+                                    <span>Próxima viagem</span>
+                                    <span style={{ color: 'var(--primary)', fontWeight: '600' }}>Maldivas</span>
+                                </li>
+                                <li>
+                                    <span>Status</span>
+                                    <span style={{ color: 'var(--success)', fontWeight: '600' }}>Confirmada</span>
+                                </li>
+                                <li>
+                                    <span>Data</span>
+                                    <span>15 Jun 2024</span>
+                                </li>
+                            </ul>
+                            <button className="btn btn-primary" style={{ width: '100%', marginTop: '1rem' }} onClick={onStartBooking}>
+                                <i className="fas fa-plus" aria-hidden="true"></i>
+                                Nova Reserva
+                            </button>
+                        </div>
+                        
+                        <div className="dashboard-section">
+                            <h3 className="section-title">
+                                <i className="fas fa-cog" aria-hidden="true"></i>
+                                Preferências
+                            </h3>
+                            <ul className="section-list">
+                                <li>
+                                    <span>Notificações por e-mail</span>
+                                    <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                        <input type="checkbox" checked={user.preferences?.newsletter || false} />
+                                    </label>
+                                </li>
+                                <li>
+                                    <span>Alertas de promoção</span>
+                                    <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                        <input type="checkbox" checked={user.preferences?.notifications || false} />
+                                    </label>
+                                </li>
+                                <li>
+                                    <span>Assento preferido</span>
+                                    <span>Janela</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Componente ProgressBar
+        function ProgressBar({ steps, currentStep }) {
+            const progress = ((currentStep - 1) / (steps.length - 1)) * 100;
+
+            return (
+                <div className="progress-bar">
+                    <div className="progress-line">
+                        <div className="progress-line-fill" style={{ width: `${progress}%` }}></div>
+                    </div>
+                    {steps.map((step, index) => (
+                        <div key={step.id} className={`progress-step ${index + 1 <= currentStep ? 'active' : ''}`}>
+                            <div className="step-number">{index + 1}</div>
+                            <div className="step-label">{step.label}</div>
+                        </div>
+                    ))}
+                </div>
+            );
+        }
+
+        // Componente Card de Destino
+        function DestinationCard({ destination, onSelect, onFavorite, isFavorite }) {
+            return (
+                <div className="card" onClick={() => onSelect(destination)} role="button" tabIndex="0">
+                    <div className="card-image-container" style={{ position: 'relative' }}>
+                        <img 
+                            src={destination.image} 
+                            alt={destination.name} 
+                            className="card-image" 
+                            loading="lazy"
+                        />
+                        <button 
+                            className={`btn-favorite ${isFavorite ? 'active' : ''}`}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onFavorite(destination);
+                            }}
+                            aria-label={isFavorite ? `Remover ${destination.name} dos favoritos` : `Adicionar ${destination.name} aos favoritos`}
+                        >
+                            <i className={`fas fa-heart ${isFavorite ? 'fas' : 'far'}`} aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div className="card-content">
+                        <div className="card-header">
+                            <h3 className="card-title">{destination.name}</h3>
+                            <div className="card-rating" aria-label={`Avaliação: ${destination.rating} estrelas`}>
+                                <i className="fas fa-star" aria-hidden="true"></i>
+                                <span>{destination.rating}</span>
+                            </div>
+                        </div>
+                        
+                        <div className="card-location">
+                            <i className="fas fa-map-marker-alt" aria-hidden="true"></i>
+                            <span>{destination.country}</span>
+                            <span style={{ marginLeft: '0.5rem', fontSize: '0.75rem', color: 'var(--gray-500)' }}>
+                                <i className="fas fa-plane" aria-hidden="true"></i> {destination.airportCode}
+                            </span>
+                        </div>
+                        
+                        <p className="card-description">
+                            {destination.description}
+                        </p>
+                        
+                        <div className="card-details">
+                            <div className="detail-item">
+                                <i className="fas fa-calendar" aria-hidden="true"></i>
+                                <span>{destination.duration}</span>
+                            </div>
+                            <div className="detail-item">
+                                <i className="fas fa-sun" aria-hidden="true"></i>
+                                <span>{destination.climate}</span>
+                            </div>
+                            <div className="detail-item">
+                                <i className="fas fa-star" aria-hidden="true"></i>
+                                <span>{destination.bestSeason}</span>
+                            </div>
+                            <div className="detail-item">
+                                <i className="fas fa-users" aria-hidden="true"></i>
+                                <span>{destination.reviews.toLocaleString()} avaliações</span>
+                            </div>
+                        </div>
+                        
+                        <div className="card-price">
+                            <div className="price">
+                                R$ {destination.price.toLocaleString()}
+                                <span>/pessoa</span>
+                            </div>
+                            <button 
+                                className="btn btn-primary btn-icon"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onSelect(destination);
+                                }}
+                                aria-label={`Ver voos para ${destination.name}`}
+                            >
+                                <i className="fas fa-arrow-right" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Componente Card de Voo
+        function FlightCard({ flight, onSelect }) {
+            const getAircraftIcon = (type) => {
+                if (type.includes('Wide')) return 'fas fa-plane';
+                if (type.includes('Narrow')) return 'fas fa-plane';
+                return 'fas fa-plane';
+            };
+
+            return (
+                <div className="flight-card">
+                    <div className="flight-header">
+                        <div className="airline">
+                            <div className="airline-logo">{flight.airlineCode}</div>
+                            <div>
+                                <div className="airline-name">{flight.airline}</div>
+                                <div className="flight-class">{flight.class}</div>
+                                <div style={{ fontSize: '0.75rem', color: 'var(--gray-500)', marginTop: '0.25rem' }}>
+                                    Voo {flight.flightNumber}
+                                </div>
+                            </div>
+                        </div>
+                        <div style={{ textAlign: 'right' }}>
+                            <div style={{ fontSize: '1.75rem', fontWeight: '800', color: 'var(--primary)' }}>
+                                R$ {flight.price.toLocaleString()}
+                            </div>
+                            <div style={{ fontSize: '0.875rem', color: 'var(--gray-600)' }}>
+                                {flight.seatsAvailable} assento{flight.seatsAvailable !== 1 ? 's' : ''} disponível{flight.seatsAvailable !== 1 ? 'is' : ''}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="flight-route">
+                        <div style={{ textAlign: 'center' }}>
+                            <div className="route-time" style={{ color: 'var(--primary)' }}>
+                                {flight.departure}
+                            </div>
+                            <div className="route-city">{flight.from}</div>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--gray-500)' }}>{flight.fromCity}</div>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--gray-500)', marginTop: '0.25rem' }}>
+                                Partida
+                            </div>
+                        </div>
+                        
+                        <div className="route-duration">
+                            <i className="fas fa-plane" style={{ color: 'var(--primary)' }} aria-hidden="true"></i>
+                            <div>{flight.duration}</div>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--gray-500)' }}>
+                                {flight.stops === 0 ? 'Voo direto' : `${flight.stops} escala${flight.stops > 1 ? 's' : ''}`}
+                            </div>
+                        </div>
+                        
+                        <div style={{ textAlign: 'center' }}>
+                            <div className="route-time">{flight.arrival}</div>
+                            <div className="route-city">{flight.to}</div>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--gray-500)' }}>{flight.toCity}</div>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--gray-500)', marginTop: '0.25rem' }}>
+                                Chegada
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {/* Informações do Avião */}
+                    <div style={{ 
+                        background: 'var(--gray-50)', 
+                        borderRadius: 'var(--radius)',
+                        padding: '1rem',
+                        marginBottom: '1rem'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            <div style={{
+                                width: '2.5rem',
+                                height: '2.5rem',
+                                background: 'linear-gradient(135deg, var(--primary), var(--secondary))',
+                                borderRadius: 'var(--radius-sm)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: 'white',
+                                fontSize: '1rem'
+                            }}>
+                                <i className={getAircraftIcon(flight.aircraftType)} aria-hidden="true"></i>
+                            </div>
+                            <div>
+                                <div style={{ fontWeight: '600', color: 'var(--gray-800)' }}>
+                                    {flight.aircraft}
+                                </div>
+                                <div style={{ fontSize: '0.75rem', color: 'var(--gray-600)' }}>
+                                    {flight.aircraftType} • Horário de saída: {flight.departure}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="flight-info">
+                        <div className="info-item">
+                            <i className="fas fa-suitcase" style={{ color: 'var(--gray-400)' }} aria-hidden="true"></i>
+                            <div>
+                                <div className="info-label">Bagagem</div>
+                                <div className="info-value">{flight.baggage}</div>
+                            </div>
+                        </div>
+                        
+                        <div className="info-item">
+                            <i className="fas fa-wifi" style={{ color: 'var(--gray-400)' }} aria-hidden="true"></i>
+                            <div>
+                                <div className="info-label">Comodidades</div>
+                                <div className="info-value">{flight.amenities.length} incluídas</div>
+                            </div>
+                        </div>
+                        
+                        <div className="info-item">
+                            <i className="fas fa-calendar" style={{ color: 'var(--gray-400)' }} aria-hidden="true"></i>
+                            <div>
+                                <div className="info-label">Data</div>
+                                <div className="info-value">{new Date(flight.date).toLocaleDateString('pt-BR')}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button 
+                        className="btn btn-primary" 
+                        onClick={() => onSelect(flight)} 
+                        style={{ width: '100%' }}
+                        aria-label={`Selecionar voo ${flight.airline} para ${flight.toCity}`}
+                    >
+                        <i className="fas fa-user-plus" aria-hidden="true"></i>
+                        Selecionar Voo
+                    </button>
+                </div>
+            );
+        }
+
+        // Componente Aviões Disponíveis
+        function AvailableAircrafts({ flights }) {
+            const uniqueAircrafts = [...new Set(flights.map(f => f.aircraft))];
+            
+            return (
+                <div>
+                    <h3 style={{ fontSize: '1.5rem', fontWeight: '600', color: 'white', marginBottom: '1rem' }}>
+                        Aviões Disponíveis
+                    </h3>
+                    <div className="aircrafts-container">
+                        {uniqueAircrafts.map((aircraft, index) => {
+                            const flight = flights.find(f => f.aircraft === aircraft);
+                            const flightsWithAircraft = flights.filter(f => f.aircraft === aircraft);
+                            
+                            return (
+                                <div key={index} className="aircraft-card">
+                                    <div className="aircraft-header">
+                                        <div className="aircraft-icon">
+                                            <i className="fas fa-plane" aria-hidden="true"></i>
+                                        </div>
+                                        <div className="aircraft-info">
+                                            <div className="aircraft-name">{aircraft}</div>
+                                            <div className="aircraft-type">{flight.aircraftType}</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="aircraft-details">
+                                        <div className="aircraft-detail">
+                                            <i className="fas fa-plane-departure" aria-hidden="true"></i>
+                                            <span>Horários: {flightsWithAircraft.map(f => f.departure).join(', ')}</span>
+                                        </div>
+                                        <div className="aircraft-detail">
+                                            <i className="fas fa-chair" aria-hidden="true"></i>
+                                            <span>{flight.seatsAvailable} assentos</span>
+                                        </div>
+                                        <div className="aircraft-detail">
+                                            <i className="fas fa-clock" aria-hidden="true"></i>
+                                            <span>Duração: {flight.duration}</span>
+                                        </div>
+                                        <div className="aircraft-detail">
+                                            <i className="fas fa-building" aria-hidden="true"></i>
+                                            <span>{flight.airline}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--gray-600)' }}>
+                                        <i className="fas fa-info-circle" aria-hidden="true"></i> {flightsWithAircraft.length} voo{flightsWithAircraft.length !== 1 ? 's' : ''} disponível{flightsWithAircraft.length !== 1 ? 'is' : ''}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            );
+        }
+
+        // Componente Horários de Voo
+        function FlightTimes({ flights, onSelectTime }) {
+            const flightsByTime = flights.reduce((groups, flight) => {
+                const time = flight.departure;
+                const hour = parseInt(time.split(':')[0]);
+                let timeGroup;
+                
+                if (hour >= 5 && hour < 12) timeGroup = 'Manhã';
+                else if (hour >= 12 && hour < 18) timeGroup = 'Tarde';
+                else if (hour >= 18 && hour < 22) timeGroup = 'Noite';
+                else timeGroup = 'Madrugada';
+                
+                if (!groups[timeGroup]) groups[timeGroup] = [];
+                groups[timeGroup].push(flight);
+                return groups;
+            }, {});
+
+            return (
+                <div style={{ marginBottom: '2rem' }}>
+                    <h3 style={{ fontSize: '1.5rem', fontWeight: '600', color: 'white', marginBottom: '1rem' }}>
+                        Horários de Partida
+                    </h3>
+                    <div className="flight-times">
+                        {Object.entries(flightsByTime).map(([timeSlot, timeFlights]) => (
+                            <div key={timeSlot} className="time-slot" onClick={() => onSelectTime(timeSlot)}>
+                                <div className="time-display">{timeSlot}</div>
+                                <div className="time-label">
+                                    {timeFlights.length} voo{timeFlights.length !== 1 ? 's' : ''}
+                                </div>
+                                <div style={{ fontSize: '0.75rem', color: 'var(--gray-500)', marginTop: '0.5rem' }}>
+                                    {timeFlights.map(f => f.departure).join(', ')}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        // Componente Dados do Passageiro
+        function PassengerData({ onNext, onBack, flight }) {
+            const [formData, setFormData] = React.useState({
+                firstName: '',
+                lastName: '',
+                email: '',
+                phone: '',
+                document: '',
+                birthDate: '',
+                nationality: 'BR'
+            });
+
+            const [errors, setErrors] = React.useState({});
+
+            const handleChange = (field, value) => {
+                setFormData(prev => ({ ...prev, [field]: value }));
+                if (errors[field]) {
+                    setErrors(prev => ({ ...prev, [field]: '' }));
+                }
+            };
+
+            const validateForm = () => {
+                const newErrors = {};
+                
+                if (!formData.firstName.trim()) newErrors.firstName = 'Nome é obrigatório';
+                if (!formData.lastName.trim()) newErrors.lastName = 'Sobrenome é obrigatório';
+                if (!formData.email.trim()) newErrors.email = 'E-mail é obrigatório';
+                else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'E-mail inválido';
+                
+                if (!formData.phone.trim()) newErrors.phone = 'Telefone é obrigatório';
+                if (!formData.document.trim()) newErrors.document = 'Documento é obrigatório';
+                if (!formData.birthDate) newErrors.birthDate = 'Data de nascimento é obrigatória';
+                
+                setErrors(newErrors);
+                return Object.keys(newErrors).length === 0;
+            };
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (validateForm()) {
+                    onNext(formData);
+                }
+            };
+
+            return (
+                <div className="passenger-form-container">
+                    <div className="passenger-header">
+                        <h1 className="passenger-title">Dados do Passageiro</h1>
+                        <p style={{ color: 'var(--gray-600)' }}>Preencha os dados para continuar com a reserva</p>
+                    </div>
+                    
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label className="form-label">Nome *</label>
+                                <input
+                                    type="text"
+                                    className={`form-input ${errors.firstName ? 'error' : ''}`}
+                                    value={formData.firstName}
+                                    onChange={(e) => handleChange('firstName', e.target.value)}
+                                    placeholder="Digite seu nome"
+                                />
+                                {errors.firstName && <div className="form-error">{errors.firstName}</div>}
+                            </div>
+                            
+                            <div className="form-group">
+                                <label className="form-label">Sobrenome *</label>
+                                <input
+                                    type="text"
+                                    className={`form-input ${errors.lastName ? 'error' : ''}`}
+                                    value={formData.lastName}
+                                    onChange={(e) => handleChange('lastName', e.target.value)}
+                                    placeholder="Digite seu sobrenome"
+                                />
+                                {errors.lastName && <div className="form-error">{errors.lastName}</div>}
+                            </div>
+                        </div>
+                        
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label className="form-label">E-mail *</label>
+                                <input
+                                    type="email"
+                                    className={`form-input ${errors.email ? 'error' : ''}`}
+                                    value={formData.email}
+                                    onChange={(e) => handleChange('email', e.target.value)}
+                                    placeholder="seu@email.com"
+                                />
+                                {errors.email && <div className="form-error">{errors.email}</div>}
+                            </div>
+                            
+                            <div className="form-group">
+                                <label className="form-label">Telefone *</label>
+                                <input
+                                    type="tel"
+                                    className={`form-input ${errors.phone ? 'error' : ''}`}
+                                    value={formData.phone}
+                                    onChange={(e) => handleChange('phone', e.target.value)}
+                                    placeholder="(11) 99999-9999"
+                                />
+                                {errors.phone && <div className="form-error">{errors.phone}</div>}
+                            </div>
+                        </div>
+                        
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label className="form-label">CPF/Passaporte *</label>
+                                <input
+                                    type="text"
+                                    className={`form-input ${errors.document ? 'error' : ''}`}
+                                    value={formData.document}
+                                    onChange={(e) => handleChange('document', e.target.value)}
+                                    placeholder="000.000.000-00"
+                                />
+                                {errors.document && <div className="form-error">{errors.document}</div>}
+                            </div>
+                            
+                            <div className="form-group">
+                                <label className="form-label">Data de Nascimento *</label>
+                                <input
+                                    type="date"
+                                    className={`form-input ${errors.birthDate ? 'error' : ''}`}
+                                    value={formData.birthDate}
+                                    onChange={(e) => handleChange('birthDate', e.target.value)}
+                                />
+                                {errors.birthDate && <div className="form-error">{errors.birthDate}</div>}
+                            </div>
+                        </div>
+                        
+                        <div className="form-group">
+                            <label className="form-label">Nacionalidade</label>
+                            <select
+                                className="form-input"
+                                value={formData.nationality}
+                                onChange={(e) => handleChange('nationality', e.target.value)}
+                            >
+                                <option value="BR">Brasileira</option>
+                                <option value="US">Americana</option>
+                                <option value="AR">Argentina</option>
+                                <option value="PT">Portuguesa</option>
+                                <option value="FR">Francesa</option>
+                                <option value="JP">Japonesa</option>
+                            </select>
+                        </div>
+                        
+                        <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+                            <button type="button" className="btn btn-outline" onClick={onBack}>
+                                <i className="fas fa-arrow-left" aria-hidden="true"></i>
+                                Voltar
+                            </button>
+                            <button type="submit" className="btn btn-primary">
+                                Continuar para Assentos
+                                <i className="fas fa-arrow-right" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            );
+        }
+
+        // Componente Seleção de Assentos
+        function SeatSelection({ onNext, onBack, flight }) {
+            const [selectedSeats, setSelectedSeats] = React.useState([]);
+            
+            // Gerar mapa de assentos
+            const generateSeats = () => {
+                const rows = 20;
+                const seatsPerRow = 6;
+                const seats = [];
+                
+                for (let row = 1; row <= rows; row++) {
+                    for (let seatNum = 0; seatNum < seatsPerRow; seatNum++) {
+                        const seatLetter = String.fromCharCode(65 + seatNum);
+                        const seatId = `${row}${seatLetter}`;
+                        const isOccupied = Math.random() > 0.7; // 30% ocupados
+                        const seatType = seatTypes[Math.floor(Math.random() * seatTypes.length)];
+                        
+                        seats.push({
+                            id: seatId,
+                            row,
+                            seat: seatLetter,
+                            type: seatType.type,
+                            typeName: seatType.name,
+                            price: seatType.price,
+                            occupied: isOccupied,
+                            selected: false
+                        });
+                    }
+                }
+                return seats;
+            };
+
+            const [seats, setSeats] = React.useState(generateSeats());
+
+            const handleSeatClick = (seatId) => {
+                setSeats(prevSeats => 
+                    prevSeats.map(seat => {
+                        if (seat.id === seatId && !seat.occupied) {
+                            const newSelected = !seat.selected;
+                            if (newSelected && selectedSeats.length >= 6) {
+                                window.addToast?.('Máximo de 6 assentos por reserva', 'warning');
+                                return seat;
+                            }
+                            
+                            // Atualizar lista de selecionados
+                            if (newSelected) {
+                                setSelectedSeats(prev => [...prev, { ...seat, selected: true }]);
+                            } else {
+                                setSelectedSeats(prev => prev.filter(s => s.id !== seatId));
+                            }
+                            
+                            return { ...seat, selected: newSelected };
+                        }
+                        return seat;
+                    })
+                );
+            };
+
+            const getSeatClass = (seat) => {
+                if (seat.occupied) return 'seat occupied';
+                if (seat.selected) return 'seat selected';
+                return 'seat available';
+            };
+
+            const totalSeatPrice = selectedSeats.reduce((sum, seat) => sum + seat.price, 0);
+
+            return (
+                <div className="seat-selection-container">
+                    <div className="seat-selection-header">
+                        <div>
+                            <h1 className="seat-selection-title">Seleção de Assentos</h1>
+                            <p style={{ color: 'var(--gray-600)' }}>Escolha seus assentos no {flight.aircraft}</p>
+                        </div>
+                        
+                        <div className="seat-legend">
+                            <div className="legend-item">
+                                <div className="legend-color legend-available"></div>
+                                <span>Disponível</span>
+                            </div>
+                            <div className="legend-item">
+                                <div className="legend-color legend-selected"></div>
+                                <span>Selecionado</span>
+                            </div>
+                            <div className="legend-item">
+                                <div className="legend-color legend-occupied"></div>
+                                <span>Ocupado</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                        <div style={{ 
+                            background: 'var(--gray-100)', 
+                            padding: '1rem', 
+                            borderRadius: 'var(--radius)',
+                            display: 'inline-block'
+                        }}>
+                            <i className="fas fa-info-circle" style={{ marginRight: '0.5rem', color: 'var(--primary)' }} aria-hidden="true"></i>
+                            Clique nos assentos disponíveis para selecionar
+                        </div>
+                    </div>
+                    
+                    <div className="seats-grid">
+                        {seats.map(seat => (
+                            <div
+                                key={seat.id}
+                                className={getSeatClass(seat)}
+                                onClick={() => handleSeatClick(seat.id)}
+                                title={`Assento ${seat.id} - ${seat.typeName} - R$ ${seat.price}`}
+                            >
+                                {seat.seat}
+                            </div>
+                        ))}
+                    </div>
+                    
+                    {selectedSeats.length > 0 && (
+                        <div className="booking-summary">
+                            <h3 className="summary-title">Assentos Selecionados</h3>
+                            {selectedSeats.map(seat => (
+                                <div key={seat.id} className="summary-item">
+                                    <div className="summary-label">
+                                        Assento {seat.id} - {seat.typeName}
+                                    </div>
+                                    <div className="summary-value">
+                                        R$ {seat.price.toLocaleString()}
+                                    </div>
+                                </div>
+                            ))}
+                            <div className="summary-item">
+                                <div className="summary-label">Total Assentos</div>
+                                <div className="summary-value">R$ {totalSeatPrice.toLocaleString()}</div>
+                            </div>
+                        </div>
+                    )}
+                    
+                    <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+                        <button className="btn btn-outline" onClick={onBack}>
+                            <i className="fas fa-arrow-left" aria-hidden="true"></i>
+                            Voltar
+                        </button>
+                        <button 
+                            className="btn btn-primary" 
+                            onClick={() => onNext({ seats: selectedSeats, seatPrice: totalSeatPrice })}
+                            disabled={selectedSeats.length === 0}
+                        >
+                            Continuar para Pagamento
+                            <i className="fas fa-arrow-right" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        // Componente Pagamento
+        function Payment({ onComplete, onBack, flight, passengerData, seatData }) {
+            const [selectedPayment, setSelectedPayment] = React.useState(null);
+            const [cardData, setCardData] = React.useState({
+                number: '',
+                name: '',
+                expiry: '',
+                cvv: ''
+            });
+
+            const totalPrice = flight.price + (seatData?.seatPrice || 0);
+
+            const handlePaymentSelect = (methodId) => {
+                setSelectedPayment(methodId);
+            };
+
+            const handleCardChange = (field, value) => {
+                setCardData(prev => ({ ...prev, [field]: value }));
+            };
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (!selectedPayment) {
+                    window.addToast?.('Selecione uma forma de pagamento', 'warning');
+                    return;
+                }
+                
+                const paymentInfo = {
+                    method: paymentMethods.find(m => m.id === selectedPayment),
+                    cardData: selectedPayment === 1 ? cardData : null,
+                    total: totalPrice
+                };
+                
+                onComplete(paymentInfo);
+            };
+
+            return (
+                <div className="passenger-form-container">
+                    <div className="passenger-header">
+                        <h1 className="passenger-title">Pagamento</h1>
+                        <p style={{ color: 'var(--gray-600)' }}>Escolha como deseja pagar sua viagem</p>
+                    </div>
+                    
+                    <div className="booking-summary">
+                        <h3 className="summary-title">Resumo da Reserva</h3>
+                        <div className="summary-item">
+                            <div className="summary-label">Voo {flight.airline} {flight.flightNumber}</div>
+                            <div className="summary-value">R$ {flight.price.toLocaleString()}</div>
+                        </div>
+                        <div className="summary-item">
+                            <div className="summary-label">Assentos ({seatData?.seats?.length || 0})</div>
+                            <div className="summary-value">R$ {(seatData?.seatPrice || 0).toLocaleString()}</div>
+                        </div>
+                        <div className="summary-item">
+                            <div className="summary-label">Taxas e Impostos</div>
+                            <div className="summary-value">R$ {(totalPrice * 0.15).toLocaleString()}</div>
+                        </div>
+                        <div className="summary-item">
+                            <div className="summary-label">Total</div>
+                            <div className="summary-value" style={{ color: 'var(--primary)', fontSize: '1.25rem' }}>
+                                R$ {(totalPrice * 1.15).toLocaleString()}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style={{ margin: '2rem 0' }}>
+                        <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem', color: 'var(--gray-800)' }}>
+                            Formas de Pagamento
+                        </h3>
+                        
+                        <div className="payment-methods">
+                            {paymentMethods.map(method => (
+                                <div
+                                    key={method.id}
+                                    className={`payment-method ${selectedPayment === method.id ? 'selected' : ''}`}
+                                    onClick={() => handlePaymentSelect(method.id)}
+                                >
+                                    <div className="payment-icon">
+                                        <i className={`fas ${method.icon}`} aria-hidden="true"></i>
+                                    </div>
+                                    <div className="payment-name">{method.name}</div>
+                                    <div className="payment-desc">{method.description}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    
+                    {selectedPayment === 1 && (
+                        <div style={{ margin: '2rem 0' }}>
+                            <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem', color: 'var(--gray-800)' }}>
+                                Dados do Cartão
+                            </h3>
+                            
+                            <form>
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label className="form-label">Número do Cartão</label>
+                                        <input
+                                            type="text"
+                                            className="form-input"
+                                            value={cardData.number}
+                                            onChange={(e) => handleCardChange('number', e.target.value)}
+                                            placeholder="0000 0000 0000 0000"
+                                        />
+                                    </div>
+                                </div>
+                                
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label className="form-label">Nome no Cartão</label>
+                                        <input
+                                            type="text"
+                                            className="form-input"
+                                            value={cardData.name}
+                                            onChange={(e) => handleCardChange('name', e.target.value)}
+                                            placeholder="JOÃO S SILVA"
+                                        />
+                                    </div>
+                                </div>
+                                
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label className="form-label">Validade</label>
+                                        <input
+                                            type="text"
+                                            className="form-input"
+                                            value={cardData.expiry}
+                                            onChange={(e) => handleCardChange('expiry', e.target.value)}
+                                            placeholder="MM/AA"
+                                        />
+                                    </div>
+                                    
+                                    <div className="form-group">
+                                        <label className="form-label">CVV</label>
+                                        <input
+                                            type="text"
+                                            className="form-input"
+                                            value={cardData.cvv}
+                                            onChange={(e) => handleCardChange('cvv', e.target.value)}
+                                            placeholder="123"
+                                        />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    )}
+                    
+                    <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+                        <button className="btn btn-outline" onClick={onBack}>
+                            <i className="fas fa-arrow-left" aria-hidden="true"></i>
+                            Voltar
+                        </button>
+                        <button className="btn btn-primary" onClick={handleSubmit}>
+                            <i className="fas fa-lock" aria-hidden="true"></i>
+                            Confirmar Pagamento
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        // Componente Confirmação
+        function Confirmation({ bookingData, onComplete }) {
+            const [bookingCode, setBookingCode] = React.useState('');
+
+            React.useEffect(() => {
+                // Gerar código de reserva
+                const code = 'TRV' + Math.random().toString(36).substr(2, 8).toUpperCase();
+                setBookingCode(code);
+                
+                // Simular processamento
+                setTimeout(() => {
+                    onComplete();
+                }, 3000);
+            }, []);
+
+            return (
+                <div className="confirmation-container">
+                    <div className="confirmation-icon">
+                        <i className="fas fa-check-circle" aria-hidden="true"></i>
+                    </div>
+                    
+                    <h1 className="confirmation-title">Reserva Confirmada!</h1>
+                    
+                    <div className="confirmation-message">
+                        Sua reserva foi processada com sucesso. Os detalhes da sua viagem foram enviados para o e-mail {bookingData.passengerData.email}.
+                    </div>
+                    
+                    <div className="booking-details">
+                        <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem', color: 'var(--gray-800)' }}>
+                            Detalhes da Reserva
+                        </h3>
+                        
+                        <div className="summary-item">
+                            <div className="summary-label">Código da Reserva</div>
+                            <div className="summary-value">{bookingCode}</div>
+                        </div>
+                        
+                        <div className="summary-item">
+                            <div className="summary-label">Voo</div>
+                            <div className="summary-value">{bookingData.flight.airline} {bookingData.flight.flightNumber}</div>
+                        </div>
+                        
+                        <div className="summary-item">
+                            <div className="summary-label">Rota</div>
+                            <div className="summary-value">{bookingData.flight.fromCity} → {bookingData.flight.toCity}</div>
+                        </div>
+                        
+                        <div className="summary-item">
+                            <div className="summary-label">Data e Hora</div>
+                            <div className="summary-value">
+                                {new Date(bookingData.flight.date).toLocaleDateString('pt-BR')} às {bookingData.flight.departure}
+                            </div>
+                        </div>
+                        
+                        <div className="summary-item">
+                            <div className="summary-label">Passageiro</div>
+                            <div className="summary-value">{bookingData.passengerData.firstName} {bookingData.passengerData.lastName}</div>
+                        </div>
+                        
+                        <div className="summary-item">
+                            <div className="summary-label">Assentos</div>
+                            <div className="summary-value">
+                                {bookingData.seatData.seats.map(s => s.id).join(', ')}
+                            </div>
+                        </div>
+                        
+                        <div className="summary-item">
+                            <div className="summary-label">Total Pago</div>
+                            <div className="summary-value" style={{ color: 'var(--primary)', fontSize: '1.25rem' }}>
+                                R$ {((bookingData.flight.price + bookingData.seatData.seatPrice) * 1.15).toLocaleString()}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+                        <button className="btn btn-primary" onClick={() => window.print()}>
+                            <i className="fas fa-print" aria-hidden="true"></i>
+                            Imprimir Voucher
+                        </button>
+                        <button className="btn btn-outline" onClick={() => window.location.reload()}>
+                            <i className="fas fa-home" aria-hidden="true"></i>
+                            Nova Reserva
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        // Componente Principal do App
+        function App() {
+            const [currentView, setCurrentView] = React.useState('home');
+            const [authMode, setAuthMode] = React.useState('login');
+            const [currentStep, setCurrentStep] = React.useState(1);
+            const [user, setUser] = React.useState(null);
+            const [toasts, setToasts] = React.useState([]);
+            const [favorites, setFavorites] = React.useState([]);
+            const [selectedDestination, setSelectedDestination] = React.useState(null);
+            const [selectedFlight, setSelectedFlight] = React.useState(null);
+            const [passengerData, setPassengerData] = React.useState(null);
+            const [seatData, setSeatData] = React.useState(null);
+            const [paymentData, setPaymentData] = React.useState(null);
+            const [bookingComplete, setBookingComplete] = React.useState(false);
+            const [filter, setFilter] = React.useState('all');
+
+            const addToast = (message, type = 'info') => {
+                const id = Date.now();
+                setToasts(prev => [...prev, { id, message, type }]);
+            };
+
+            React.useEffect(() => {
+                window.addToast = addToast;
+                return () => {
+                    window.addToast = null;
+                };
+            }, []);
+
+            const removeToast = (id) => {
+                setToasts(prev => prev.filter(toast => toast.id !== id));
+            };
+
+            const handleLogin = (userData) => {
+                setUser(userData);
+                setCurrentView('home');
+            };
+
+            const handleRegister = (userData) => {
+                setUser(userData);
+                setCurrentView('home');
+            };
+
+            const handleLogout = () => {
+                setUser(null);
+                setCurrentView('auth');
+                setAuthMode('login');
+                addToast('Logout realizado com sucesso!', 'info');
+            };
+
+            const handleToggleFavorite = (destination) => {
+                const isFavorite = favorites.some(f => f.id === destination.id);
+                if (isFavorite) {
+                    setFavorites(prev => prev.filter(f => f.id !== destination.id));
+                    addToast(`Removido dos favoritos: ${destination.name}`, 'info');
+                } else {
+                    setFavorites(prev => [...prev, destination]);
+                    addToast(`Adicionado aos favoritos: ${destination.name}`, 'success');
+                }
+            };
+
+            const handleSelectDestination = (destination) => {
+                setSelectedDestination(destination);
+                setCurrentView('flights');
+                setCurrentStep(1);
+                addToast(`Destino selecionado: ${destination.name}`, 'info');
+            };
+
+            const handleSelectFlight = (flight) => {
+                setSelectedFlight(flight);
+                setCurrentView('passenger');
+                setCurrentStep(2);
+                addToast(`Voo selecionado! Partida: ${flight.departure}`, 'success');
+            };
+
+            const handlePassengerDataSubmit = (data) => {
+                setPassengerData(data);
+                setCurrentView('seats');
+                setCurrentStep(3);
+                addToast('Dados do passageiro salvos!', 'success');
+            };
+
+            const handleSeatSelectionSubmit = (data) => {
+                setSeatData(data);
+                setCurrentView('payment');
+                setCurrentStep(4);
+                addToast('Assentos selecionados!', 'success');
+            };
+
+            const handlePaymentSubmit = (data) => {
+                setPaymentData(data);
+                setCurrentView('confirmation');
+                setCurrentStep(5);
+                addToast('Pagamento processado!', 'success');
+            };
+
+            const handleBookingComplete = () => {
+                setBookingComplete(true);
+                addToast('Reserva finalizada com sucesso!', 'success');
+            };
+
+            const handleBack = () => {
+                if (currentView === 'passenger') {
+                    setCurrentView('flights');
+                    setCurrentStep(1);
+                } else if (currentView === 'seats') {
+                    setCurrentView('passenger');
+                    setCurrentStep(2);
+                } else if (currentView === 'payment') {
+                    setCurrentView('seats');
+                    setCurrentStep(3);
+                } else if (currentView === 'flights') {
+                    setCurrentView('home');
+                    setCurrentStep(1);
+                } else if (currentView === 'auth') {
+                    setCurrentView('home');
+                }
+            };
+
+            const handleStartBooking = () => {
+                setCurrentView('home');
+            };
+
+            // Filtrar voos
+            const filteredFlights = selectedDestination 
+                ? flightsData.filter(flight => flight.destinationId === selectedDestination.id)
+                : [];
+
+            // Progress steps
+            const progressSteps = [
+                { id: 1, label: 'Escolher Voo' },
+                { id: 2, label: 'Dados do Passageiro' },
+                { id: 3, label: 'Selecionar Assentos' },
+                { id: 4, label: 'Pagamento' },
+                { id: 5, label: 'Confirmação' }
+            ];
+
+            // Renderizar view atual
+            const renderView = () => {
+                switch(currentView) {
+                    case 'auth':
+                        return authMode === 'login' ? (
+                            <Login 
+                                onLogin={handleLogin}
+                                onSwitchToRegister={() => setAuthMode('register')}
+                            />
+                        ) : (
+                            <Register 
+                                onRegister={handleRegister}
+                                onSwitchToLogin={() => setAuthMode('login')}
+                            />
+                        );
+                    
+                    case 'home':
+                        return (
+                            <div className="app">
+                                <div className="header">
+                                    <div className="logo">
+                                        <div className="logo-icon">
+                                            <i className="fas fa-plane" aria-hidden="true"></i>
+                                        </div>
+                                        <span className="logo-text">TravelReserve Pro</span>
+                                    </div>
+                                    
+                                    <div className="user-menu">
+                                        {user ? (
+                                            <>
+                                                <div className="user-avatar">
+                                                    {user.initials}
+                                                </div>
+                                                <div>
+                                                    <div style={{ color: 'var(--gray-700)', fontWeight: '600' }}>{user.name}</div>
+                                                    <div style={{ color: 'var(--gray-500)', fontSize: '0.75rem' }}>{user.email}</div>
+                                                </div>
+                                                <button className="btn btn-outline" onClick={handleLogout}>
+                                                    <i className="fas fa-sign-out-alt" aria-hidden="true"></i>
+                                                    Sair
+                                                </button>
+                                            </>
+                                        ) : (
+                                            <button className="btn btn-primary" onClick={() => setCurrentView('auth')}>
+                                                <i className="fas fa-user" aria-hidden="true"></i>
+                                                Entrar
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                                
+                                <div className="hero">
+                                    <h1 className="hero-title">
+                                        Descubra o Mundo Conosco
+                                    </h1>
+                                    <p className="hero-subtitle">
+                                        Reserve voos, escolha seus assentos e pague de forma segura. 
+                                        Tudo em um só lugar!
+                                    </p>
+                                </div>
+                                
+                                <div className="section-header">
+                                    <h2 style={{ margin: 0 }}>Destinos Populares</h2>
+                                    <div className="view-all" onClick={() => addToast('Em desenvolvimento!', 'info')}>
+                                        Ver todos
+                                        <i className="fas fa-arrow-right" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                                
+                                <div className="card-grid">
+                                    {destinationsData.map(destination => (
+                                        <DestinationCard
+                                            key={destination.id}
+                                            destination={destination}
+                                            onSelect={handleSelectDestination}
+                                            onFavorite={handleToggleFavorite}
+                                            isFavorite={favorites.some(f => f.id === destination.id)}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        );
+                    
+                    case 'flights':
+                        return (
+                            <div className="app">
+                                <button className="btn btn-back" onClick={handleBack}>
+                                    <i className="fas fa-arrow-left" aria-hidden="true"></i>
+                                    Voltar para Destinos
+                                </button>
+                                
+                                <ProgressBar steps={progressSteps} currentStep={currentStep} />
+                                
+                                <div className="section-header">
+                                    <div>
+                                        <h1 style={{ fontSize: '2rem', fontWeight: '700', color: 'white', margin: 0 }}>
+                                            Voos para {selectedDestination.name}
+                                        </h1>
+                                        <div style={{ fontSize: '1rem', opacity: '0.8', marginTop: '0.25rem' }}>
+                                            {selectedDestination.country} • {filteredFlights.length} voos disponíveis
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                {/* Filtros */}
+                                <div className="filter-bar">
+                                    <div className="filter-group">
+                                        <span className="filter-label">Ordenar por:</span>
+                                        <select className="filter-select" onChange={(e) => setFilter(e.target.value)}>
+                                            <option value="price">Menor Preço</option>
+                                            <option value="duration">Menor Duração</option>
+                                            <option value="departure">Horário de Partida</option>
+                                            <option value="arrival">Horário de Chegada</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div className="filter-group">
+                                        <span className="filter-label">Companhia Aérea:</span>
+                                        <select className="filter-select">
+                                            <option value="all">Todas</option>
+                                            <option value="emirates">Emirates</option>
+                                            <option value="qatar">Qatar Airways</option>
+                                            <option value="latam">LATAM</option>
+                                            <option value="airfrance">Air France</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div className="filter-group">
+                                        <span className="filter-label">Paradas:</span>
+                                        <select className="filter-select">
+                                            <option value="all">Qualquer</option>
+                                            <option value="direct">Voo Direto</option>
+                                            <option value="1stop">1 Parada</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                {/* Aviões disponíveis */}
+                                <AvailableAircrafts flights={filteredFlights} />
+                                
+                                {/* Horários */}
+                                <FlightTimes flights={filteredFlights} onSelectTime={(time) => addToast(`Filtrando por ${time}`, 'info')} />
+                                
+                                {/* Lista de voos */}
+                                <div style={{ marginTop: '2rem' }}>
+                                    <h2 style={{ fontSize: '1.5rem', fontWeight: '600', color: 'white', marginBottom: '1rem' }}>
+                                        Todos os Voos Disponíveis
+                                    </h2>
+                                    
+                                    {filteredFlights.length === 0 ? (
+                                        <div className="empty-state">
+                                            <div className="empty-state-icon">
+                                                <i className="fas fa-plane-slash" aria-hidden="true"></i>
+                                            </div>
+                                            <h3 style={{ marginBottom: '0.5rem', color: 'var(--gray-700)' }}>
+                                                Nenhum voo encontrado
+                                            </h3>
+                                            <p style={{ color: 'var(--gray-600)' }}>
+                                                Não encontramos voos para este destino nas datas selecionadas.
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        filteredFlights.map(flight => (
+                                            <FlightCard
+                                                key={flight.id}
+                                                flight={flight}
+                                                onSelect={handleSelectFlight}
+                                            />
+                                        ))
+                                    )}
+                                </div>
+                            </div>
+                        );
+                    
+                    case 'passenger':
+                        return (
+                            <div className="app">
+                                <button className="btn btn-back" onClick={handleBack}>
+                                    <i className="fas fa-arrow-left" aria-hidden="true"></i>
+                                    Voltar para Voos
+                                </button>
+                                
+                                <ProgressBar steps={progressSteps} currentStep={currentStep} />
+                                
+                                <PassengerData
+                                    onNext={handlePassengerDataSubmit}
+                                    onBack={handleBack}
+                                    flight={selectedFlight}
+                                />
+                            </div>
+                        );
+                    
+                    case 'seats':
+                        return (
+                            <div className="app">
+                                <button className="btn btn-back" onClick={handleBack}>
+                                    <i className="fas fa-arrow-left" aria-hidden="true"></i>
+                                    Voltar
+                                </button>
+                                
+                                <ProgressBar steps={progressSteps} currentStep={currentStep} />
+                                
+                                <SeatSelection
+                                    onNext={handleSeatSelectionSubmit}
+                                    onBack={handleBack}
+                                    flight={selectedFlight}
+                                />
+                            </div>
+                        );
+                    
+                    case 'payment':
+                        return (
+                            <div className="app">
+                                <button className="btn btn-back" onClick={handleBack}>
+                                    <i className="fas fa-arrow-left" aria-hidden="true"></i>
+                                    Voltar
+                                </button>
+                                
+                                <ProgressBar steps={progressSteps} currentStep={currentStep} />
+                                
+                                <Payment
+                                    onComplete={handlePaymentSubmit}
+                                    onBack={handleBack}
+                                    flight={selectedFlight}
+                                    passengerData={passengerData}
+                                    seatData={seatData}
+                                />
+                            </div>
+                        );
+                    
+                    case 'confirmation':
+                        return (
+                            <div className="app">
+                                <ProgressBar steps={progressSteps} currentStep={currentStep} />
+                                
+                                <Confirmation
+                                    bookingData={{
+                                        flight: selectedFlight,
+                                        passengerData,
+                                        seatData,
+                                        paymentData
+                                    }}
+                                    onComplete={() => {
+                                        setTimeout(() => {
+                                            setCurrentView('home');
+                                            setCurrentStep(1);
+                                            setSelectedDestination(null);
+                                            setSelectedFlight(null);
+                                            setPassengerData(null);
+                                            setSeatData(null);
+                                            setPaymentData(null);
+                                        }, 5000);
+                                    }}
+                                />
+                            </div>
+                        );
+                    
+                    default:
+                        return null;
+                }
+            };
+
+            return (
+                <div>
+                    {renderView()}
+                    
+                    {/* Toast Notifications */}
+                    <div className="toast-container">
+                        {toasts.map(toast => (
+                            <Toast
+                                key={toast.id}
+                                message={toast.message}
+                                type={toast.type}
+                                onClose={() => removeToast(toast.id)}
+                            />
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        // Renderizar a aplicação
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
