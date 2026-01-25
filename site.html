@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusTech | Soluções Digitais Inovadoras</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        :root {
+            --primary: #0a192f;
+            --secondary: #64ffda;
+            --accent: #ff6b8b;
+            --light: #ccd6f6;
+            --dark: #112240;
+            --gray: #8892b0;
+            --gradient: linear-gradient(135deg, #0a192f 0%, #112240 50%, #1a2c4d 100%);
+            --gradient-accent: linear-gradient(135deg, #64ffda 0%, #4fd1c7 100%);
+            --gradient-secondary: linear-gradient(135deg, #ff6b8b 0%, #ff8e53 100%);
+            --shadow: 0 10px 30px -15px rgba(2, 12, 27, 0.7);
+            --shadow-hover: 0 20px 40px -15px rgba(2, 12, 27, 0.8);
+            --transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+        
+        body {
+            background-color: var(--primary);
+            color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background: var(--gradient);
+            min-height: 100vh;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--dark);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 5px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: rgba(10, 25, 47, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.2rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(100, 255, 218, 0.1);
+            transition: var(--transition);
+        }
+        
+        .scrolled {
+            padding: 0.8rem 0;
+            box-shadow: var(--shadow);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .logo i {
+            font-size: 2rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+        
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            transition: var(--transition);
+            padding: 0.5rem 0;
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: var(--gradient-accent);
+            transition: var(--transition);
+        }
+        
+        nav a:hover::after,
+        nav a.active::after {
+            width: 100%;
+        }
+        
+        nav a:hover {
+            color: var(--secondary);
+        }
+        
+        .cta-nav {
+            background: var(--gradient-accent);
+            color: var(--primary);
+            padding: 0.7rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .cta-nav:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(100, 255, 218, 0.2);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--secondary);
+            font-size: 1.8rem;
+            cursor: pointer;
+            z-index: 1001;
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 10rem 0 5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(100, 255, 218, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 30%, rgba(255, 107, 139, 0.05) 0%, transparent 50%);
+            z-index: -1;
+        }
+        
+        .hero-content {
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+        }
+        
+        .hero-text {
+            flex: 1;
+        }
+        
+        .hero-image {
+            flex: 1;
+            position: relative;
+        }
+        
+        .hero-image-inner {
+            width: 100%;
+            height: 400px;
+            background: var(--gradient-accent);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            transform: perspective(1000px) rotateY(-10deg);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .hero-image-inner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80') center/cover;
+            mix-blend-mode: multiply;
+        }
+        
+        .hero-badge {
+            display: inline-block;
+            background: var(--gradient-accent);
+            color: var(--primary);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, #ccd6f6, #64ffda);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--gradient-accent);
+            color: var(--primary);
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(100, 255, 218, 0.3);
+        }
+        
+        .cta-secondary {
+            background: transparent;
+            color: var(--secondary);
+            border: 2px solid var(--secondary);
+        }
+        
+        .cta-secondary:hover {
+            background: rgba(100, 255, 218, 0.1);
+            box-shadow: 0 15px 30px rgba(100, 255, 218, 0.1);
+        }
+        
+        /* Services Section */
+        .services {
+            padding: 6rem 0;
+            background: var(--dark);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .services-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(255, 107, 139, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(100, 255, 218, 0.03) 0%, transparent 50%);
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2.8rem;
+            background: linear-gradient(to right, #64ffda, #ff6b8b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+        
+        .section-title p {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+        }
+        
+        .service-card {
+            background: rgba(17, 34, 64, 0.7);
+            border-radius: 15px;
+            padding: 2.5rem 2rem;
+            transition: var(--transition);
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-accent);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: -1;
+        }
+        
+        .service-card:hover::before {
+            opacity: 0.05;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--secondary);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--light);
+        }
+        
+        /* Stats Section */
+        .stats {
+            padding: 5rem 0;
+            background: var(--primary);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-text {
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+        
+        /* About Section */
+        .about {
+            padding: 6rem 0;
+            background: var(--dark);
+        }
+        
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 5rem;
+        }
+        
+        .about-text {
+            flex: 1;
+        }
+        
+        .about-image {
+            flex: 1;
+            position: relative;
+        }
+        
+        .about-image-main {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-hover);
+            transform: rotate(3deg);
+            transition: var(--transition);
+        }
+        
+        .about-image-main:hover {
+            transform: rotate(0deg);
+        }
+        
+        .about-image-main img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+        
+        .about-image-badge {
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            background: var(--gradient-secondary);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+        }
+        
+        .about-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        .feature-icon {
+            background: var(--gradient-accent);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            padding: 6rem 0;
+            background: var(--primary);
+        }
+        
+        .testimonials-slider {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .testimonial-card {
+            background: var(--dark);
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            transition: var(--transition);
+        }
+        
+        .testimonial-card:hover {
+            border-color: var(--secondary);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .testimonial-text {
+            font-size: 1.2rem;
+            font-style: italic;
+            margin-bottom: 2rem;
+            color: var(--light);
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .author-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--secondary);
+        }
+        
+        /* Contact Section */
+        .contact {
+            padding: 6rem 0;
+            background: var(--dark);
+        }
+        
+        .contact-content {
+            display: flex;
+            gap: 4rem;
+        }
+        
+        .contact-info {
+            flex: 1;
+        }
+        
+        .contact-form {
+            flex: 1;
+            background: rgba(17, 34, 64, 0.7);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+        }
+        
+        .contact-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .contact-method {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.8rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--light);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(10, 25, 47, 0.7);
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            border-radius: 8px;
+            font-size: 1rem;
+            color: var(--light);
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.1);
+        }
+        
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        /* Footer */
+        footer {
+            background: #0a1120;
+            padding: 4rem 0 2rem;
+            border-top: 1px solid rgba(100, 255, 218, 0.1);
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .footer-links a:hover {
+            color: var(--secondary);
+            transform: translateX(5px);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            background: rgba(100, 255, 218, 0.1);
+            border-radius: 50%;
+            color: var(--secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 1.2rem;
+        }
+        
+        .social-links a:hover {
+            background: var(--gradient-accent);
+            color: var(--primary);
+            transform: translateY(-5px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--gray);
+        }
+        
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        /* Mobile Responsiveness */
+        @media (max-width: 1024px) {
+            .hero-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .about-content {
+                flex-direction: column;
+            }
+            
+            .contact-content {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            nav {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .mobile-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 300px;
+                height: 100vh;
+                background: var(--dark);
+                padding: 6rem 2rem 2rem;
+                transition: var(--transition);
+                box-shadow: var(--shadow-hover);
+                z-index: 1000;
+            }
+            
+            .mobile-menu.active {
+                right: 0;
+            }
+            
+            .mobile-menu ul {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .mobile-menu a {
+                font-size: 1.2rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2.2rem;
+            }
+            
+            .about-features {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-buttons {
+                justify-content: center;
+            }
+        }
+        
+        /* Loading Animation */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+        
+        .loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(100, 255, 218, 0.2);
+            border-top-color: var(--secondary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // Componente principal da aplicação
+        function App() {
+            const [menuOpen, setMenuOpen] = React.useState(false);
+            const [scrolled, setScrolled] = React.useState(false);
+            const [loading, setLoading] = React.useState(true);
+            const [activeSection, setActiveSection] = React.useState('home');
+            const [testimonialIndex, setTestimonialIndex] = React.useState(0);
+            const [formData, setFormData] = React.useState({
+                name: '',
+                email: '',
+                phone: '',
+                service: '',
+                message: ''
+            });
+            
+            const testimonials = [
+                {
+                    text: "A NexusTech transformou completamente nossa presença digital. O site que desenvolveram aumentou nossas conversões em 300% em apenas 3 meses.",
+                    author: "Ana Silva",
+                    role: "CEO, Inovatech Solutions",
+                    avatar: "https://randomuser.me/api/portraits/women/44.jpg"
+                },
+                {
+                    text: "Trabalho excepcional! A equipe foi profissional, criativa e entregou antes do prazo. Recomendo fortemente seus serviços.",
+                    author: "Carlos Mendes",
+                    role: "Diretor, DigitalMind",
+                    avatar: "https://randomuser.me/api/portraits/men/32.jpg"
+                },
+                {
+                    text: "O aplicativo desenvolvido pela NexusTech superou todas as expectativas. A interface é intuitiva e a performance é excelente.",
+                    author: "Mariana Costa",
+                    role: "Gerente de Produto, TechGrowth",
+                    avatar: "https://randomuser.me/api/portraits/women/68.jpg"
+                }
+            ];
+            
+            React.useEffect(() => {
+                // Simular carregamento
+                const timer = setTimeout(() => {
+                    setLoading(false);
+                }, 1500);
+                
+                // Scroll listener
+                const handleScroll = () => {
+                    setScrolled(window.scrollY > 50);
+                    
+                    // Atualizar seção ativa
+                    const sections = ['home', 'services', 'about', 'testimonials', 'contact'];
+                    const currentSection = sections.find(section => {
+                        const element = document.getElementById(section);
+                        if (element) {
+                            const rect = element.getBoundingClientRect();
+                            return rect.top <= 100 && rect.bottom >= 100;
+                        }
+                        return false;
+                    });
+                    
+                    if (currentSection) {
+                        setActiveSection(currentSection);
+                    }
+                };
+                
+                window.addEventListener('scroll', handleScroll);
+                
+                // Auto-rotate testimonials
+                const testimonialTimer = setInterval(() => {
+                    setTestimonialIndex((prev) => (prev + 1) % testimonials.length);
+                }, 5000);
+                
+                return () => {
+                    clearTimeout(timer);
+                    clearInterval(testimonialTimer);
+                    window.removeEventListener('scroll', handleScroll);
+                };
+            }, []);
+            
+            const toggleMenu = () => {
+                setMenuOpen(!menuOpen);
+            };
+            
+            const closeMenu = () => {
+                setMenuOpen(false);
+            };
+            
+            const handleInputChange = (e) => {
+                const { name, value } = e.target;
+                setFormData({
+                    ...formData,
+                    [name]: value
+                });
+            };
+            
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                
+                // Simular envio
+                const submitBtn = e.target.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+                submitBtn.disabled = true;
+                
+                setTimeout(() => {
+                    alert(`Obrigado, ${formData.name}! Sua mensagem foi enviada com sucesso. Entraremos em contato em até 24h.`);
+                    setFormData({
+                        name: '',
+                        email: '',
+                        phone: '',
+                        service: '',
+                        message: ''
+                    });
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }, 1500);
+            };
+            
+            const LoadingScreen = () => (
+                <div className={`loading ${loading ? '' : 'hidden'}`}>
+                    <div className="loader"></div>
+                </div>
+            );
+            
+            const Header = () => (
+                <header className={scrolled ? 'scrolled' : ''}>
+                    <div className="container header-container">
+                        <div className="logo">
+                            <i className="fas fa-cube"></i>
+                            <span>NexusTech</span>
+                        </div>
+                        
+                        <nav className="desktop-nav">
+                            <ul>
+                                <li><a href="#home" className={activeSection === 'home' ? 'active' : ''}>Início</a></li>
+                                <li><a href="#services" className={activeSection === 'services' ? 'active' : ''}>Serviços</a></li>
+                                <li><a href="#about" className={activeSection === 'about' ? 'active' : ''}>Sobre</a></li>
+                                <li><a href="#testimonials" className={activeSection === 'testimonials' ? 'active' : ''}>Depoimentos</a></li>
+                                <li><a href="#contact" className={activeSection === 'contact' ? 'active' : ''}>Contato</a></li>
+                            </ul>
+                        </nav>
+                        
+                        <a href="#contact" className="cta-nav">Começar Projeto</a>
+                        
+                        <button className="mobile-menu-btn" onClick={toggleMenu}>
+                            <i className={menuOpen ? 'fas fa-times' : 'fas fa-bars'}></i>
+                        </button>
+                        
+                        <div className={`mobile-menu ${menuOpen ? 'active' : ''}`}>
+                            
+                        </div>
+                    </div>
+                </header>
+            );
+            
+            const Hero = () => (
+                <section className="hero" id="home">
+                    <div className="hero-bg"></div>
+                    <div className="container">
+                        <div className="hero-content">
+                            <div className="hero-text">
+                                <span className="hero-badge">🚀 Transformação Digital</span>
+                                <h1>Impulsione seu Negócio com Soluções Tech de Ponta</h1>
+                                <p>Desenvolvemos experiências digitais excepcionais que combinam design inovador, tecnologia de última geração e estratégia de negócios para impulsionar seu crescimento.</p>
+                                <div className="hero-buttons">
+                                    <a href="#contact" className="cta-button">
+                                        <i className="fas fa-rocket"></i> Começar Projeto
+                                    </a>
+                                    <a href="#services" className="cta-button cta-secondary">
+                                        <i className="fas fa-eye"></i> Nossos Serviços
+                                    </a>
+                                </div>
+                            </div>
+                            <div className="hero-image floating">
+                                <div className="hero-image-inner"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+            
+            const Services = () => (
+                <section className="services" id="services">
+                    <div className="services-bg"></div>
+                    <div className="container">
+                        <div className="section-title">
+                            <h2>Serviços Especializados</h2>
+                            <p>Soluções completas para transformar sua visão em realidade digital</p>
+                        </div>
+                        
+                        <div className="services-grid">
+                            {[
+                                {icon: 'fas fa-code', title: 'Desenvolvimento Web', desc: 'Sites e aplicações web responsivas, performáticas e com as melhores práticas de desenvolvimento.'},
+                                {icon: 'fas fa-mobile-alt', title: 'Apps Móveis', desc: 'Aplicativos nativos e híbridos para iOS e Android com UX/UI excepcionais.'},
+                                {icon: 'fas fa-paint-brush', title: 'UI/UX Design', desc: 'Design centrado no usuário que combina estética e funcionalidade para experiências memoráveis.'},
+                                {icon: 'fas fa-shopping-cart', title: 'E-commerce', desc: 'Plataformas de comércio eletrônico completas e seguras para expandir suas vendas online.'},
+                                {icon: 'fas fa-chart-line', title: 'Marketing Digital', desc: 'Estratégias de marketing digital para aumentar visibilidade, tráfego e conversões.'},
+                                {icon: 'fas fa-cloud', title: 'Cloud Solutions', desc: 'Infraestrutura e soluções em nuvem para escalabilidade, segurança e performance.'}
+                            ].map((service, index) => (
+                                <div className="service-card" key={index}>
+                                    <div className="service-icon">
+                                        <i className={service.icon}></i>
+                                    </div>
+                                    <h3>{service.title}</h3>
+                                    <p>{service.desc}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+            
+            const Stats = () => (
+                <section className="stats">
+                    <div className="container">
+                        <div className="stats-grid">
+                            {[
+                                {number: '150+', text: 'Projetos Concluídos'},
+                                {number: '98%', text: 'Satisfação do Cliente'},
+                                {number: '50+', text: 'Especialistas Tech'},
+                                {number: '24/7', text: 'Suporte Premium'}
+                            ].map((stat, index) => (
+                                <div className="stat-item" key={index}>
+                                    <div className="stat-number">{stat.number}</div>
+                                    <div className="stat-text">{stat.text}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+            
+            const About = () => (
+                <section className="about" id="about">
+                    <div className="container">
+                        <div className="section-title">
+                            <h2>Sobre a NexusTech</h2>
+                            <p>Inovação, excelência e parceria em cada projeto</p>
+                        </div>
+                        
+                        <div className="about-content">
+                            <div className="about-text">
+                                <h3>Transformando Ideias em Realidade Digital</h3>
+                                <p>Fundada em 2018, a NexusTech surgiu com a missão de democratizar o acesso a soluções tecnológicas de ponta para empresas de todos os portes. Nossa equipe multidisciplinar combina expertise técnica com visão estratégica para entregar resultados excepcionais.</p>
+                                
+                                <div className="about-features">
+                                    {[
+                                        {icon: 'fas fa-bullseye', title: 'Missão', desc: 'Empoderar negócios através de tecnologia inovadora e acessível.'},
+                                        {icon: 'fas fa-eye', title: 'Visão', desc: 'Ser referência em transformação digital na América Latina até 2025.'},
+                                        {icon: 'fas fa-heart', title: 'Valores', desc: 'Inovação, excelência, transparência e parceria.'}
+                                    ].map((feature, index) => (
+                                        <div className="feature-item" key={index}>
+                                            <div className="feature-icon">
+                                                <i className={feature.icon}></i>
+                                            </div>
+                                            <div>
+                                                <h4>{feature.title}</h4>
+                                                <p>{feature.desc}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            
+                            <div className="about-image">
+                                <div className="about-image-main">
+                                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80" alt="Equipe NexusTech" />
+                                </div>
+                                <div className="about-image-badge">
+                                    <div className="stat-number">5+</div>
+                                    <div className="stat-text">Anos de Experiência</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+            
+            const Testimonials = () => (
+                <section className="testimonials" id="testimonials">
+                    <div className="container">
+                        <div className="section-title">
+                            <h2>O que Nossos Clientes Dizem</h2>
+                            <p>Depoimentos de empresas que transformaram seus negócios conosco</p>
+                        </div>
+                        
+                        <div className="testimonials-slider">
+                            <div className="testimonial-card">
+                                <div className="testimonial-text">
+                                    "{testimonials[testimonialIndex].text}"
+                                </div>
+                                <div className="testimonial-author">
+                                    <img src={testimonials[testimonialIndex].avatar} alt={testimonials[testimonialIndex].author} className="author-avatar" />
+                                    <div className="author-info">
+                                        <h4>{testimonials[testimonialIndex].author}</h4>
+                                        <p>{testimonials[testimonialIndex].role}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="testimonial-controls" style={{display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '2rem'}}>
+                                {testimonials.map((_, index) => (
+                                    <button 
+                                        key={index}
+                                        onClick={() => setTestimonialIndex(index)}
+                                        style={{
+                                            width: '12px',
+                                            height: '12px',
+                                            borderRadius: '50%',
+                                            border: 'none',
+                                            background: index === testimonialIndex ? 'var(--secondary)' : 'var(--gray)',
+                                            cursor: 'pointer',
+                                            transition: 'var(--transition)'
+                                        }}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+            
+            const Contact = () => (
+                <section className="contact" id="contact">
+                    <div className="container">
+                        <div className="section-title">
+                            <h2>Vamos Conversar</h2>
+                            <p>Pronto para transformar seu projeto? Entre em contato conosco</p>
+                        </div>
+                        
+                        <div className="contact-content">
+                            <div className="contact-info">
+                                <h3>Entre em Contato</h3>
+                                <p>Tem um projeto em mente? Vamos conversar sobre como podemos ajudar a transformar sua ideia em realidade.</p>
+                                
+                                <div className="contact-methods">
+                                    {[
+                                        {icon: 'fas fa-map-marker-alt', title: 'Endereço', info: 'Av. Paulista, 1000 - São Paulo, SP'},
+                                        {icon: 'fas fa-phone', title: 'Telefone', info: '(11) 9999-9999'},
+                                        {icon: 'fas fa-envelope', title: 'E-mail', info: 'contato@nexustech.com'},
+                                        {icon: 'fas fa-clock', title: 'Horário', info: 'Seg - Sex: 9h às 18h'}
+                                    ].map((method, index) => (
+                                        <div className="contact-method" key={index}>
+                                            <div className="contact-icon">
+                                                <i className={method.icon}></i>
+                                            </div>
+                                            <div>
+                                                <h4>{method.title}</h4>
+                                                <p>{method.info}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            
+                            <div className="contact-form">
+                                <form onSubmit={handleSubmit}>
+                                    <div className="form-group">
+                                        <label htmlFor="name">Nome Completo *</label>
+                                        <input 
+                                            type="text" 
+                                            id="name" 
+                                            name="name" 
+                                            className="form-control" 
+                                            value={formData.name}
+                                            onChange={handleInputChange}
+                                            required 
+                                            placeholder="Seu nome completo"
+                                        />
+                                    </div>
+                                    
+                                    <div className="form-group">
+                                        <label htmlFor="email">E-mail *</label>
+                                        <input 
+                                            type="email" 
+                                            id="email" 
+                                            name="email" 
+                                            className="form-control" 
+                                            value={formData.email}
+                                            onChange={handleInputChange}
+                                            required 
+                                            placeholder="seu@email.com"
+                                        />
+                                    </div>
+                                    
+                                    <div className="form-group">
+                                        <label htmlFor="phone">Telefone</label>
+                                        <input 
+                                            type="tel" 
+                                            id="phone" 
+                                            name="phone" 
+                                            className="form-control" 
+                                            value={formData.phone}
+                                            onChange={handleInputChange}
+                                            placeholder="(11) 99999-9999"
+                                        />
+                                    </div>
+                                    
+                                    <div className="form-group">
+                                        <label htmlFor="service">Serviço de Interesse</label>
+                                        <select 
+                                            id="service" 
+                                            name="service" 
+                                            className="form-control" 
+                                            value={formData.service}
+                                            onChange={handleInputChange}
+                                        >
+                                            <option value="">Selecione um serviço</option>
+                                            <option value="web">Desenvolvimento Web</option>
+                                            <option value="mobile">Apps Móveis</option>
+                                            <option value="design">UI/UX Design</option>
+                                            <option value="ecommerce">E-commerce</option>
+                                            <option value="marketing">Marketing Digital</option>
+                                            <option value="cloud">Cloud Solutions</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div className="form-group">
+                                        <label htmlFor="message">Mensagem *</label>
+                                        <textarea 
+                                            id="message" 
+                                            name="message" 
+                                            className="form-control" 
+                                            value={formData.message}
+                                            onChange={handleInputChange}
+                                            required
+                                            placeholder="Descreva seu projeto ou dúvida..."
+                                        ></textarea>
+                                    </div>
+                                    
+                                    <button type="submit" className="cta-button" style={{width: '100%'}}>
+                                        <i className="fas fa-paper-plane"></i> Enviar Mensagem
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+            
+            const Footer = () => (
+                <footer>
+                    <div className="container">
+                        <div className="footer-content">
+                            <div className="footer-column">
+                                <div className="logo" style={{fontSize: '1.5rem', marginBottom: '1rem'}}>
+                                    <i className="fas fa-cube"></i>
+                                    <span>NexusTech</span>
+                                </div>
+                                <p>Soluções digitais inovadoras para impulsionar seu negócio no mundo digital.</p>
+                                <div className="social-links">
+                                    <a href="#"><i className="fab fa-facebook-f"></i></a>
+                                    <a href="#"><i className="fab fa-twitter"></i></a>
+                                    <a href="#"><i className="fab fa-instagram"></i></a>
+                                    <a href="#"><i className="fab fa-linkedin-in"></i></a>
+                                    <a href="#"><i className="fab fa-github"></i></a>
+                                </div>
+                            </div>
+                            
+                            <div className="footer-column">
+                                <h3>Links Rápidos</h3>
+                                <ul className="footer-links">
+                                    <li><a href="#home"><i className="fas fa-chevron-right"></i> Início</a></li>
+                                    <li><a href="#services"><i className="fas fa-chevron-right"></i> Serviços</a></li>
+                                    <li><a href="#about"><i className="fas fa-chevron-right"></i> Sobre</a></li>
+                                    <li><a href="#testimonials"><i className="fas fa-chevron-right"></i> Depoimentos</a></li>
+                                    <li><a href="#contact"><i className="fas fa-chevron-right"></i> Contato</a></li>
+                                </ul>
+                            </div>
+                            
+                            <div className="footer-column">
+                                <h3>Serviços</h3>
+                                <ul className="footer-links">
+                                    <li><a href="#"><i className="fas fa-chevron-right"></i> Desenvolvimento Web</a></li>
+                                    <li><a href="#"><i className="fas fa-chevron-right"></i> Apps Móveis</a></li>
+                                    <li><a href="#"><i className="fas fa-chevron-right"></i> UI/UX Design</a></li>
+                                    <li><a href="#"><i className="fas fa-chevron-right"></i> E-commerce</a></li>
+                                    <li><a href="#"><i className="fas fa-chevron-right"></i> Marketing Digital</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div className="copyright">
+                            <p>&copy; 2023 NexusTech. Todos os direitos reservados. | Desenvolvido com <i className="fas fa-heart" style={{color: 'var(--accent)'}}></i> e React</p>
+                        </div>
+                    </div>
+                </footer>
+            );
+            
+            return (
+                <>
+                    <LoadingScreen />
+                    <div className="App">
+                        <Header />
+                        <Hero />
+                        <Services />
+                        <Stats />
+                        <About />
+                        <Testimonials />
+                        <Contact />
+                        <Footer />
+                    </div>
+                </>
+            );
+        }
+
+        // Renderizando a aplicação
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
